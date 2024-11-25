@@ -11,11 +11,13 @@ const mongoose = require("mongoose");
 //or add other database connection logic
 
 mongoose
-  .connect("mongodb://localhost/vidly")
-  .then(() => console.log("Connected to MongoDB..."))
-  .catch((err) => console.error("Could not connect to MongoDB..."));
+  .connect(
+    "mongodb+srv://aryangoel574:Hisupyo%407058@cluster0.xwshw.mongodb.net/test?retryWrites=true&w=majority"
+  )
+  .then(() => console.log("Connected to MongoDB Atlas..."))
+  .catch((err) => console.error("Could not connect to MongoDB Atlas..."));
 
-app.use(cors());
+app.use(cors({ origin: "http://localhost:5174" }));
 app.use(express.json());
 
 //add mongoose compass connection logic
@@ -26,6 +28,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/users", users);
 app.use("/api/maps", maps);
+app.use("/api/auth", require("./routes/auth"));
 
 app.listen(3011, () => {
   console.log("listening on port 3011");

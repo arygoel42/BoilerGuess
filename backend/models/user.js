@@ -1,4 +1,6 @@
 //add model logic
+const Joi = require("joi");
+
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
@@ -14,8 +16,35 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+
+  points: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const User = mongoose.model("User", userSchema);
 
-module.exports = User;
+//add JOI validation logic
+
+const validateUser = (user) => {
+  const schema = Joi.object({
+    username: Joi.string().required().messages({
+      "any.required": "Username is required",
+      "string.empty": "Username is required",
+    }),
+    password: Joi.string().required().messages({
+      "any.required": "Password is required",
+      "string.empty": "Password is required",
+    }),
+    email: Joi.string().email().required().messages({
+      "any.required": "Email is required",
+      "string.empty": "Email is required",
+    }),
+  });
+
+  return schema.validate(user);
+};
+
+exports.User = User;
+exports.validateUser = validateUser;

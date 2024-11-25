@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const { User, validateUser } = require("../models/user");
+const bcrypt = require("bcrypt");
 
 router.post("/", (req, res) => {
   const resource = req.body.resource;
@@ -8,6 +10,43 @@ router.post("/", (req, res) => {
     res.status(200).send(resource);
   } else if (!resource) {
     res.status(400).send("bad request");
+  }
+});
+
+router.post("/signUp", async (req, res) => {
+  // Validate the incoming request
+  const { error } = validateUser(req.body);
+  if (error) {
+    const validationErrors = error.details
+      .map((detail) => detail.message)
+      .join(",");
+    return res.status(400).send({ success: false, message: validationErrors });
+  }
+
+  // Check if the user already exists
+  let user = await User.findOne({ username: req.body.username });
+  if (user) {
+    return res.status(201).send("User already exists");
+  }
+
+  // Create a new user
+  const newUser = new User({
+    username: req.body.username,
+    password: req.body.password,
+    email: req.body.email,
+  });
+
+  try {
+    const savedUser = await newUser.save();
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(savedUser.password, 10);
+    savedUser.password = hashedPassword;
+    await savedUser.save();
+
+    return res.status(200);
+  } catch (err) {
+    return res.status(500).send("Error saving user: " + err.message);
   }
 });
 
