@@ -43,10 +43,13 @@ router.post("/signUp", async (req, res) => {
     const hashedPassword = await bcrypt.hash(savedUser.password, 10);
     savedUser.password = hashedPassword;
     await savedUser.save();
+    const token = savedUser.generateAuthToken(); // gnerate and save the token
 
-    return res.status(200);
+    return res.status(200).send({ token: token });
   } catch (err) {
-    return res.status(500).send("Error saving user: " + err.message);
+    return res
+      .status(500)
+      .send({ success: false, message: "Error saving user: " + err.message });
   }
 });
 

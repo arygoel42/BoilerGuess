@@ -33,9 +33,13 @@ const SignUp = () => {
         }
       );
 
-      if (response.data.success) {
+      console.log("entering processing pipline");
+
+      if (response.status === 200) {
         console.log("success");
         console.log("user created", response.data);
+        localStorage.setItem("token", response.data.token);
+        navigate("/");
         setErr(null);
       } else if (response.status === 201) {
         console.log("user already created");
@@ -45,6 +49,7 @@ const SignUp = () => {
         setErr(response.data);
       }
     } catch (err) {
+      console.log("error");
       if (err.response && err.response.data && err.response.data.message) {
         setErr(err.response.data.message); // Display error from the server
       } else {

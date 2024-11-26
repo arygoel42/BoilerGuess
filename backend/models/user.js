@@ -1,5 +1,7 @@
 //add model logic
 const Joi = require("joi");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const mongoose = require("mongoose");
 
@@ -22,6 +24,10 @@ const userSchema = new mongoose.Schema({
     default: 0,
   },
 });
+
+userSchema.methods.generateAuthToken = function () {
+  return jwt.sign({ _id: this._id }, process.env.JWTKEY);
+};
 
 const User = mongoose.model("User", userSchema);
 

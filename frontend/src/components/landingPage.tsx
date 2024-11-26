@@ -1,34 +1,41 @@
 import React, { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { MapPin, School, Home, Building, Map } from "lucide-react";
-
+import { useNavigate } from "react-router-dom";
+import EngineeringMall from "../assets/EngineeringMall.jpg";
 const LandingPage = () => {
-  const [showAuth, setShowAuth] = useState(false);
-  const [isLogin, setIsLogin] = useState(true);
+  const navigate = useNavigate();
+  const [selectedLandmark, setSelectedLandmark] = useState(null);
 
   const landmarks = [
     {
       icon: Building,
       name: "Bell Tower",
       description: "The iconic Purdue Bell Tower",
+      fact: "The Bell Tower's clock plays the Purdue fight song every hour.",
+      image: "/images/bell-tower.jpg", // Replace with the actual image path
     },
     {
       icon: Home,
       name: "Hovde Hall",
       description: "Administrative heart of Purdue",
+      fact: "Hovde Hall was named after Purdue's longest-serving president.",
+      image: "/images/hovde-hall.jpg", // Replace with the actual image path
     },
-    { icon: School, name: "PMU", description: "Purdue Memorial Union" },
+    {
+      icon: School,
+      name: "PMU",
+      description: "Purdue Memorial Union",
+      fact: "PMU has a bowling alley in its basement.",
+      image: "/images/pmu.jpg", // Replace with the actual image path
+    },
     {
       icon: Map,
       name: "Engineering Mall",
       description: "Heart of the engineering campus",
+      fact: "The Engineering Fountain weighs 240 tons and was a gift from the Class of 1939.",
+      image: EngineeringMall, // Replace with the actual image path
     },
   ];
 
@@ -40,7 +47,7 @@ const LandingPage = () => {
           <div className="flex items-center space-x-3">
             <MapPin className="h-8 w-8 text-yellow-500" />
             <div>
-              <span className="text-2xl font-bold">Purdue GeoGuesser</span>
+              <span className="text-2xl font-bold">BoilerGuess</span>
               <div className="text-yellow-500 text-sm">
                 Boiler Up! Hammer Down!
               </div>
@@ -50,8 +57,7 @@ const LandingPage = () => {
             <Button
               variant="outline"
               onClick={() => {
-                setIsLogin(true);
-                setShowAuth(true);
+                navigate("/login");
               }}
               className="text-white border-white hover:bg-white hover:text-black"
             >
@@ -59,8 +65,7 @@ const LandingPage = () => {
             </Button>
             <Button
               onClick={() => {
-                setIsLogin(false);
-                setShowAuth(true);
+                navigate("/signup");
               }}
               className="bg-yellow-500 text-black hover:bg-yellow-600"
             >
@@ -73,13 +78,6 @@ const LandingPage = () => {
       {/* Hero Section */}
       <main className="container mx-auto px-4 py-16">
         <div className="text-center space-y-6">
-          <div className="flex justify-center mb-8">
-            <img
-              src="/api/placeholder/150/150"
-              alt="Purdue P"
-              className="rounded-full border-4 border-yellow-500"
-            />
-          </div>
           <h1 className="text-5xl font-bold text-gray-900">
             Ever Greater<span className="text-yellow-500">.</span>
           </h1>
@@ -88,16 +86,6 @@ const LandingPage = () => {
             Bell Tower to Ross-Ade Stadium, how well do you know your way
             around?
           </p>
-          <Button
-            size="lg"
-            onClick={() => {
-              setIsLogin(false);
-              setShowAuth(true);
-            }}
-            className="bg-black text-white hover:bg-gray-800 text-lg px-8"
-          >
-            Start Your Journey
-          </Button>
         </div>
 
         {/* Landmarks Grid */}
@@ -105,7 +93,8 @@ const LandingPage = () => {
           {landmarks.map((landmark, index) => (
             <Card
               key={index}
-              className="border-2 border-gray-200 hover:border-yellow-500 transition-all"
+              className="border-2 border-gray-200 hover:border-yellow-500 transition-all cursor-pointer"
+              onClick={() => setSelectedLandmark(landmark)}
             >
               <CardHeader>
                 <div className="flex items-center space-x-2">
@@ -119,6 +108,31 @@ const LandingPage = () => {
             </Card>
           ))}
         </div>
+
+        {/* Landmark Details */}
+        {selectedLandmark && (
+          <div className="mt-16 flex flex-col lg:flex-row items-center lg:items-start space-y-8 lg:space-y-0 lg:space-x-16">
+            <div className="lg:w-1/2 text-center lg:text-left">
+              <h2 className="text-3xl font-bold text-gray-900">
+                {selectedLandmark.name}
+              </h2>
+              <p className="text-gray-600 mt-4">
+                {selectedLandmark.description}
+              </p>
+              <p className="text-gray-700 font-medium mt-2">
+                Fact: {selectedLandmark.fact}
+              </p>
+            </div>
+            <div className="lg:w-1/2">
+              <img
+                src={selectedLandmark.image}
+                alt={selectedLandmark.name}
+                className="rounded-lg shadow-lg"
+                width={500}
+              />
+            </div>
+          </div>
+        )}
 
         {/* Footer */}
         <div className="mt-16 text-center text-gray-600">

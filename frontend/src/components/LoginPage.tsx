@@ -1,8 +1,10 @@
 import React from "react";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [err, setErr] = useState<string | null>(null);
   const [welcome, setWelcome] = useState<String | null>(null);
 
@@ -18,7 +20,8 @@ const LoginPage = () => {
 
       if (response.status === 200) {
         setErr(null);
-        setWelcome(response.data.user.username);
+        localStorage.setItem("token", response.data.token);
+        navigate("/");
       }
     } catch (error) {
       if (
@@ -59,3 +62,5 @@ const LoginPage = () => {
 export default LoginPage;
 
 //the whole purpose of this component is to recive a valid jwt token or passport validation
+//go and review try catch and joi error handling when u are more awake
+//go and review the authLog middleware
