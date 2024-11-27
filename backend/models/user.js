@@ -5,7 +5,7 @@ require("dotenv").config();
 
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({ // define schema for database
   username: {
     type: String,
     required: true,
