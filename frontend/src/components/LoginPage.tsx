@@ -21,7 +21,7 @@ const LoginPage = () => {
       if (response.status === 200) {
         setErr(null);
         localStorage.setItem("token", response.data.token);
-        navigate("/");
+        navigate("/game");
       }
     } catch (error) {
       if (

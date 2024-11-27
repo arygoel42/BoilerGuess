@@ -39,7 +39,7 @@ const SignUp = () => {
         console.log("success");
         console.log("user created", response.data);
         localStorage.setItem("token", response.data.token);
-        navigate("/");
+        navigate("/game");
         setErr(null);
       } else if (response.status === 201) {
         console.log("user already created");
