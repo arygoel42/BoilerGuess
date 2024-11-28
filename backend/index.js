@@ -4,9 +4,10 @@ const cors = require("cors");
 const path = require("path");
 const users = require("./routes/users");
 const maps = require("./routes/maps");
+const session = require("express-session");
 
 const mongoose = require("mongoose");
-
+const MongoStore = require("connect-mongo");
 //add mongoose compass connection logic
 //or add other database connection logic
 
@@ -19,6 +20,18 @@ mongoose
 
 app.use(cors({ origin: "http://localhost:5174" }));
 app.use(express.json());
+
+app.use(
+  session({
+    secret: "abc kate",
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl:
+        "mongodb+srv://aryangoel574:Hisupyo%407058@cluster0.xwshw.mongodb.net/test?retryWrites=true&w=majority",
+    }),
+  })
+);
 
 //add mongoose compass connection logic
 

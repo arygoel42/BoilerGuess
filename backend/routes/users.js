@@ -3,6 +3,8 @@ const router = express.Router();
 const { User, validateUser } = require("../models/user");
 const bcrypt = require("bcrypt");
 
+const passport = require("passport");
+
 router.post("/", (req, res) => {
   const resource = req.body.resource;
 
@@ -52,5 +54,22 @@ router.post("/signUp", async (req, res) => {
       .send({ success: false, message: "Error saving user: " + err.message });
   }
 });
+
+router.get(
+  "/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+// Google OAuth callback route
+router.get(
+  "/google/callback",
+  passport.authenticate("google", { failureRedirect: "/login" }),
+  (req, res) => {
+    // On successful login, redirect to the desired route
+    res.redirect("http://localhost:5174/game"); // Or any other route you want after login
+  }
+);
+
+router.get("/profile", async (req, res) => {});
 
 module.exports = router;
