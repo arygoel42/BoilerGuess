@@ -1,102 +1,185 @@
-import React, { useState } from "react";
-import {
-  MapContainer,
-  TileLayer,
-  Polygon,
-  Marker,
-  Polyline,
-  useMapEvents,
-} from "react-leaflet";
-import L from "leaflet";
+import React, { useState, useEffect, useRef } from "react";
+import "../MapComponent.css"; // Import the external CSS
 
-// Define a square boundary around Purdue University and West Lafayette
 const boundaryCoordinates = [
-  [40.446, -86.943], // Top-left
-  [40.446, -86.899], // Top-right
-  [40.402, -86.899], // Bottom-right
-  [40.402, -86.943], // Bottom-left
-  [40.446, -86.943], // Close the square (back to top-left)
+  { lat: 40.446, lng: -86.943 }, // Top-left
+  { lat: 40.446, lng: -86.899 }, // Top-right
+  { lat: 40.402, lng: -86.899 }, // Bottom-right
+  { lat: 40.402, lng: -86.943 }, // Bottom-left
 ];
 
 const MapComponent = () => {
+  const mapRef = useRef(null);
+  const streetViewRef = useRef(null);
+  const [map, setMap] = useState(null);
+  const [panorama, setPanorama] = useState(null);
   const [markers, setMarkers] = useState([]);
-  const [polyline, setPolyline] = useState([]);
-  const [distance, setDistance] = useState(null); // Store the distance between markers
+  const [polyline, setPolyline] = useState(null);
+  const [distance, setDistance] = useState(null);
+  const [isMapEnlarged, setIsMapEnlarged] = useState(false); // Track map enlargement
 
-  // Custom Map Event Handler
-  const MapEvents = () => {
-    useMapEvents({
-      click(e) {
-        if (markers.length >= 2) {
-          alert("You can only select two locations.");
-          return;
-        }
+  // Utility function to get a random location within the boundary
+  const getRandomLocation = () => {
+    const latMin = Math.min(...boundaryCoordinates.map((coord) => coord.lat));
+    const latMax = Math.max(...boundaryCoordinates.map((coord) => coord.lat));
+    const lngMin = Math.min(...boundaryCoordinates.map((coord) => coord.lng));
+    const lngMax = Math.max(...boundaryCoordinates.map((coord) => coord.lng));
 
-        // Check if the clicked point is inside the boundary
-        const boundary = L.polygon(boundaryCoordinates);
-        if (!boundary.getBounds().contains(e.latlng)) {
-          alert("Point is outside the valid region!");
-          return;
-        }
+    return {
+      lat: latMin + Math.random() * (latMax - latMin),
+      lng: lngMin + Math.random() * (lngMax - lngMin),
+    };
+  };
 
-        // Add marker
-        setMarkers((prevMarkers) => [...prevMarkers, e.latlng]);
-
-        // If two markers are placed, draw the line and calculate the distance
-        if (markers.length === 1) {
-          const newDistance = markers[0].distanceTo(e.latlng); // Calculate distance in meters
-          setDistance(newDistance); // Store the distance
-
-          setPolyline([markers[0], e.latlng]); // Draw the polyline
-        }
-      },
+  useEffect(() => {
+    // Initialize the map
+    const googleMap = new window.google.maps.Map(mapRef.current, {
+      center: { lat: 40.424, lng: -86.9212 },
+      zoom: 15,
+      mapTypeId: "roadmap", // Use the original roadmap view
     });
-    return null;
+
+    // Draw the boundary
+    const boundary = new window.google.maps.Polygon({
+      paths: boundaryCoordinates,
+      strokeColor: "black",
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: "black",
+      fillOpacity: 0.1,
+      map: googleMap,
+    });
+
+    // Initialize the Street View panorama
+    const streetViewPanorama = new window.google.maps.StreetViewPanorama(streetViewRef.current, {
+      position: getRandomLocation(),
+      pov: { heading: 0, pitch: 0 },
+      zoom: 1,
+      addressControl: false,
+      fullscreenControl: true,
+    });
+
+    googleMap.setStreetView(streetViewPanorama);
+
+    setMap(googleMap);
+    setPanorama(streetViewPanorama);
+
+    return () => {
+      boundary.setMap(null);
+    };
+  }, []);
+
+  const handleMapClick = (event) => {
+    if (!map || markers.length >= 2) {
+      if (markers.length >= 2) alert("You can only select two locations.");
+      return;
+    }
+
+    const clickLatLng = { lat: event.latLng.lat(), lng: event.latLng.lng() };
+
+    // Check if the point is inside the boundary
+    const googleBoundary = new window.google.maps.Polygon({
+      paths: boundaryCoordinates,
+    });
+
+    if (
+      !window.google.maps.geometry.poly.containsLocation(
+        new window.google.maps.LatLng(clickLatLng),
+        googleBoundary
+      )
+    ) {
+      alert("Point is outside the valid region!");
+      return;
+    }
+
+    // Add marker
+    const newMarker = new window.google.maps.Marker({
+      position: clickLatLng,
+      map: map,
+    });
+
+    setMarkers((prevMarkers) => {
+      const updatedMarkers = [...prevMarkers, newMarker];
+
+      // If two markers are placed, draw the polyline and calculate distance
+      if (updatedMarkers.length === 2) {
+        const line = new window.google.maps.Polyline({
+          path: updatedMarkers.map((marker) => marker.getPosition()),
+          geodesic: true,
+          strokeColor: "black",
+          strokeOpacity: 1.0,
+          strokeWeight: 2,
+          map: map,
+        });
+
+        setPolyline(line);
+
+        const distanceInMeters = window.google.maps.geometry.spherical.computeDistanceBetween(
+          updatedMarkers[0].getPosition(),
+          updatedMarkers[1].getPosition()
+        );
+
+        setDistance(distanceInMeters);
+      }
+
+      return updatedMarkers;
+    });
   };
 
-  // Reset function
   const resetMap = () => {
+    // Clear markers
+    markers.forEach((marker) => marker.setMap(null));
     setMarkers([]);
-    setPolyline([]);
-    setDistance(null); // Reset distance
+
+    // Clear polyline
+    if (polyline) polyline.setMap(null);
+    setPolyline(null);
+
+    // Reset distance
+    setDistance(null);
+
+    // Set a new random location in Street View
+    if (panorama) {
+      panorama.setPosition(getRandomLocation());
+    }
   };
+
+  const toggleMapEnlargement = () => {
+    setIsMapEnlarged((prev) => !prev);
+  };
+
+  useEffect(() => {
+    if (map) {
+      // Add a click listener to the map
+      const listener = map.addListener("click", handleMapClick);
+
+      return () => {
+        window.google.maps.event.removeListener(listener);
+      };
+    }
+  }, [map, markers]);
 
   return (
-    <div>
-      <MapContainer
-        center={[40.424, -86.9212]} // Center on Purdue University
-        zoom={15}
-        style={{ height: "500px", width: "1000px" }}
-      >
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution="&copy; OpenStreetMap contributors"
-        />
-        {/* Draw square boundary */}
-        <Polygon
-          positions={boundaryCoordinates}
-          pathOptions={{ color: "black", weight: 2 }}
-        />
-        {/* Place markers */}
-        {markers.map((position, index) => (
-          <Marker key={index} position={position} />
-        ))}
-        {/* Draw polyline */}
-        {polyline.length > 0 && <Polyline positions={polyline} color="black" />}
-        {/* Handle map events */}
-        <MapEvents />
-      </MapContainer>
+    <div className="map-container">
+      {/* Fullscreen Street View */}
+      <div ref={streetViewRef} className="street-view"></div>
 
-      {/* Display distance if two markers are placed */}
-      {distance && (
-        <div style={{ marginTop: "10px" }}>
-          Distance between the markers: {distance.toFixed(2)} meters
-        </div>
-      )}
+      {/* Roadmap-style Map */}
+      <div
+        ref={mapRef}
+        className={`map-view ${isMapEnlarged ? "enlarged" : "small"}`}
+        onClick={toggleMapEnlargement}
+      ></div>
 
-      <button onClick={resetMap} style={{ marginTop: "10px" }}>
-        Reset Map
-      </button>
+      {/* Distance and Controls */}
+      <div className="controls">
+        {distance && (
+          <div>
+            Distance between the markers: {distance.toFixed(2)} meters
+          </div>
+        )}
+        <button onClick={resetMap}>Reset Map</button>
+      </div>
     </div>
   );
 };
