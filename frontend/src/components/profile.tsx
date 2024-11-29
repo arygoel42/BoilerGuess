@@ -16,6 +16,7 @@ const ProfilePage = () => {
   const navigate = useNavigate(); // React Router navigation hook
 
   if (!loggedIn) {
+    console.log(user);
     return (
       <div>
         <h1>Log in to view your profile</h1>

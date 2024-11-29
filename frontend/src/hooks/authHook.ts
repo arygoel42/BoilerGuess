@@ -12,12 +12,6 @@ const authHook = () => {
   const checkAuth = async () => {
     const token = localStorage.getItem("token");
 
-    if (!token) {
-      setLoggedIn(false);
-      setUser(null);
-      return;
-    }
-
     try {
       let response = await fetch("http://localhost:3011/api/users/profile", {
         method: "POST",
