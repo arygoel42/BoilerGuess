@@ -5,14 +5,14 @@ require("dotenv").config();
 
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({ // define schema for database
+const userSchema = new mongoose.Schema({
+  // define schema for database
   username: {
     type: String,
     required: true,
   },
   password: {
     type: String,
-    required: true,
   },
   email: {
     type: String,
@@ -22,6 +22,10 @@ const userSchema = new mongoose.Schema({ // define schema for database
   points: {
     type: Number,
     default: 0,
+  },
+
+  googleId: {
+    type: String,
   },
 });
 

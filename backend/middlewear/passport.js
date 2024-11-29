@@ -5,9 +5,9 @@ const { User } = require("../models/user"); // Import User model
 passport.use(
   new GoogleStrategy(
     {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:5174/auth/google/callback",
+      clientID: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      callbackURL: "http://localhost:3011/api/auth/google/callback",
     },
     async function (accessToken, refreshToken, profile, done) {
       try {
@@ -38,8 +38,11 @@ passport.serializeUser(function (user, done) {
   done(null, user.id); //stores user information in a session
 });
 
-passport.deserializeUser(function (id, done) {
-  User.findById(id, function (err, user) {
-    done(err, user); // retreives user information from session and assigns it to req.user
-  });
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id); // Retrieve user from the database
+    done(null, user); // Pass the user to the done function (no error)
+  } catch (err) {
+    done(err, null); // Pass the error to the done function (no user)
+  }
 });

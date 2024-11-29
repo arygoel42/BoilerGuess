@@ -2,8 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { User, validateUser } = require("../models/user");
 const bcrypt = require("bcryptjs");
-
-const passport = require("passport");
+const authLog = require("../middlewear/authLog");
 
 router.post("/", (req, res) => {
   const resource = req.body.resource;
@@ -55,21 +54,42 @@ router.post("/signUp", async (req, res) => {
   }
 });
 
-router.get(
-  "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
+router.post("/profile", authLog, async (req, res) => {
+  try {
+    const userID = req.user._id;
 
-// Google OAuth callback route
-router.get(
-  "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/login" }),
-  (req, res) => {
-    // On successful login, redirect to the desired route
-    res.redirect("http://localhost:5174/game"); // Or any other route you want after login
+    const authUser = await User.findOne({ _id: userID });
+
+    if (!authUser) {
+      return res.status(404).send({ message: "user not found" });
+    }
+
+    res.status(200).send(authUser);
+  } catch (error) {
+    res.status(500).send({ message: "database error" });
+    console.log("database error", error);
   }
-);
+});
 
-router.get("/profile", async (req, res) => {});
+router.post("/logout", authLog, async (req, res) => {
+  req.logOut((err) => {
+    if (err) {
+      return res.status(500).send("Error signing out");
+    }
+
+    // Destroy the session (if using session management)
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).send("Error destroying session");
+      }
+
+      // Clear the session cookie (replace 'cookieName' with your session cookie name)
+      res.clearCookie("connect.sid"); // or the name of the cookie you're using
+
+      // Send a success response after session is cleared
+      res.status(200).send("Successfully logged out");
+    });
+  });
+});
 
 module.exports = router;

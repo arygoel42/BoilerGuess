@@ -21,7 +21,7 @@ const LoginPage = () => {
       if (response.status === 200) {
         setErr(null);
         localStorage.setItem("token", response.data.token);
-        navigate("/game");
+        navigate("/profile");
       }
     } catch (error) {
       if (
@@ -34,6 +34,9 @@ const LoginPage = () => {
         setErr("An unexpected error occurred."); // Fallback for network errors
       }
     }
+  };
+  const googleSign = async () => {
+    window.open("http://localhost:3011/api/auth/google", "_self");
   };
 
   return (
@@ -55,6 +58,8 @@ const LoginPage = () => {
           <p className="text-green-500">{welcome}</p>
         )}
       </p>
+
+      <button onClick={googleSign}>Sign in with Google</button>
     </div>
   );
 };

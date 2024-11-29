@@ -6,6 +6,7 @@ import GamePage from "../components/GamePage";
 import SignUp from "../components/SignUp";
 import LoginPage from "../components/LoginPage";
 import LandingPage from "../components/landingPage";
+import profile from "../components/profile";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: React.createElement(LandingPage),
+  },
+  {
+    path: "/profile",
+    element: React.createElement(profile),
   },
 ]);
 

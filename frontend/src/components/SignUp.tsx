@@ -13,6 +13,10 @@ const SignUp = () => {
   });
   const [err, setErr] = useState<string | null>(null);
 
+  const googleSign = async () => {
+    window.open("http://localhost:3011/api/auth/google", "_self");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErr(null);
@@ -39,7 +43,7 @@ const SignUp = () => {
         console.log("success");
         console.log("user created", response.data);
         localStorage.setItem("token", response.data.token);
-        navigate("/game");
+        navigate("/profile");
         setErr(null);
       } else if (response.status === 201) {
         console.log("user already created");
@@ -70,6 +74,14 @@ const SignUp = () => {
 
         <Button type="submit">Submit</Button>
       </form>
+
+      <Button
+        onClick={() => {
+          googleSign();
+        }}
+      >
+        Sign up with google
+      </Button>
 
       {err != null ? <text color="red"> {err}</text> : null}
     </div>

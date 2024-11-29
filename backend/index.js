@@ -5,7 +5,8 @@ const path = require("path");
 const users = require("./routes/users");
 const maps = require("./routes/maps");
 const session = require("express-session");
-
+require("./middlewear/Passport");
+const passport = require("passport");
 const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo");
 //add mongoose compass connection logic
@@ -18,8 +19,15 @@ mongoose
   .then(() => console.log("Connected to MongoDB Atlas..."))
   .catch((err) => console.error("Could not connect to MongoDB Atlas..."));
 
-app.use(cors({ origin: "http://localhost:5174" }));
+app.use(
+  cors({
+    origin: "http://localhost:5174",
+    credentials: true, // Allow cookies and other credentials
+  })
+);
 app.use(express.json());
+
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
   session({
@@ -32,6 +40,9 @@ app.use(
     }),
   })
 );
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 //add mongoose compass connection logic
 

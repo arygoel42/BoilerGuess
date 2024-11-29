@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const { User } = require("../models/user");
 const jwt = require("jsonwebtoken");
 const Joi = require("joi");
+const passport = require("passport");
 
 router.post("/login", async (req, res) => {
   try {
@@ -43,6 +44,21 @@ router.post("/login", async (req, res) => {
     return res.status(400).send({ success: false, message: "error with DB" });
   }
 });
+
+router.get(
+  "/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+// Google OAuth callback route
+router.get(
+  "/google/callback",
+  passport.authenticate("google", { failureRedirect: "/login" }),
+  (req, res) => {
+    // On successful login, redirect to the desired route
+    res.redirect("http://localhost:5174/profile"); // Or any other route you want after login
+  }
+);
 
 function authBody(user) {
   const schema = Joi.object({
