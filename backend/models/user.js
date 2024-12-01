@@ -27,6 +27,18 @@ const userSchema = new mongoose.Schema({
   googleId: {
     type: String,
   },
+
+  streak: {
+    type: Number,
+    default: 0,
+  },
+  lifeTimeStreak: {
+    type: Number,
+    default: 0,
+  },
+  Acheivement: {
+    type: Array,
+  },
 });
 
 userSchema.methods.generateAuthToken = function () {
