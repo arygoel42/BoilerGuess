@@ -6,7 +6,6 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-  // define schema for database
   username: {
     type: String,
     required: true,
@@ -18,16 +17,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-
   points: {
     type: Number,
     default: 0,
   },
-
   googleId: {
     type: String,
   },
-
   streak: {
     type: Number,
     default: 0,
@@ -36,9 +32,50 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  Acheivement: {
-    type: Array,
+  achievements: [
+    {
+      name: { type: String, required: true },
+      description: { type: String, required: true },
+      progress: { type: String, required: true },
+    },
+  ],
+  gamesPlayed: {
+    type: Number,
+    default: 0,
   },
+});
+
+// Initialize default achievements
+userSchema.pre("save", function (next) {
+  if (!this.achievements || this.achievements.length === 0) {
+    this.achievements = [
+      {
+        name: "HardMode warrior",
+        description:
+          "Complete 5 games in hard mode and win 3000 points or more",
+        progress: "0/5",
+      },
+      {
+        name: "Campus Explorer",
+        description:
+          "Complete 5 games in hard mode and win 3000 points or more",
+        progress: "0/5",
+      },
+      {
+        name: "LandMark Warrior",
+        description:
+          "Complete 5 games in hard mode and win 3000 points or more",
+        progress: "0/5",
+      },
+      {
+        name: "Persistant champion",
+        description:
+          "Complete 5 games in hard mode and win 3000 points or more",
+        progress: "0/5",
+      },
+    ];
+  }
+  next();
 });
 
 userSchema.methods.generateAuthToken = function () {

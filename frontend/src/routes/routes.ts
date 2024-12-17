@@ -7,6 +7,9 @@ import SignUp from "../components/SignUp";
 import LoginPage from "../components/LoginPage";
 import LandingPage from "../components/landingPage";
 import profile from "../components/profile";
+import FinishPage from "../components/finishPage";
+import Leaderboard from "../components/leaderboard";
+import ProfileDetail from "../components/ProfileDetail";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +31,15 @@ const router = createBrowserRouter([
   {
     path: "/profile",
     element: React.createElement(profile),
+  },
+  { path: "/End", element: React.createElement(FinishPage) },
+  {
+    path: "/leaderboard",
+    element: React.createElement(Leaderboard),
+  },
+  {
+    path: "/player/:username",
+    element: React.createElement(ProfileDetail),
   },
 ]);
 

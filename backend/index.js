@@ -9,6 +9,7 @@ require("./middlewear/Passport");
 const passport = require("passport");
 const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo");
+const game = require("./routes/game");
 //add mongoose compass connection logic
 //or add other database connection logic
 
@@ -53,6 +54,7 @@ app.get("/", (req, res) => {
 app.use("/api/users", users);
 app.use("/api/maps", maps);
 app.use("/api/auth", require("./routes/auth"));
+app.use("/api/game", game);
 
 app.listen(3011, () => {
   console.log("listening on port 3011");

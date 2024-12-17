@@ -1,0 +1,74 @@
+.search-bar-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+}
+
+.search-form {
+  display: flex;
+  justify-content: center;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  font-size: 16px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0px 4px 8px rgba(79, 70, 229, 0.3);
+}
+
+.suggestions-dropdown {
+  position: absolute;
+  top: 45px;
+  width: 100%;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+.suggestion-item {
+  padding: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.suggestion-item:hover {
+  background-color: #f3f4f6;
+}
+
+.loader {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}
+
+.search-input {
+  color: black; /* Makes the text inside the input black */
+}
+
+.suggestion-item {
+  color: black; /* Makes the dropdown text black */
+}
+
+.suggestion-item:hover {
+  background-color: #4f46e5; /* Change the background color on hover */
+  color: white; /* Change the text color on hover */
+}

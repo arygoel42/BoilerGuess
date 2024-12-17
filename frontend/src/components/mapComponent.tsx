@@ -1,185 +1,226 @@
-import React, { useState, useEffect, useRef } from "react";
-import "../MapComponent.css"; // Import the external CSS
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
+import ResultsOverlay from "../components/resultsOveray";
+import "../MapComponent.css";
+
+interface Props {
+  setRound: (round: number) => void;
+  round: number;
+}
 
 const boundaryCoordinates = [
-  { lat: 40.446, lng: -86.943 }, // Top-left
-  { lat: 40.446, lng: -86.899 }, // Top-right
-  { lat: 40.402, lng: -86.899 }, // Bottom-right
-  { lat: 40.402, lng: -86.943 }, // Bottom-left
+  { lat: 40.425731, lng: -86.928836 },
+  { lat: 40.422656, lng: -86.904755 },
+  { lat: 40.437634, lng: -86.918154 },
+  { lat: 40.42785, lng: -86.930384 },
 ];
 
-const MapComponent = () => {
-  const mapRef = useRef(null);
-  const streetViewRef = useRef(null);
-  const [map, setMap] = useState(null);
-  const [panorama, setPanorama] = useState(null);
-  const [markers, setMarkers] = useState([]);
-  const [polyline, setPolyline] = useState(null);
-  const [distance, setDistance] = useState(null);
-  const [isMapEnlarged, setIsMapEnlarged] = useState(false); // Track map enlargement
+const MapComponent = ({ setRound, round }: Props) => {
+  const mapRef = useRef<HTMLDivElement | null>(null);
+  const streetViewRef = useRef<HTMLDivElement | null>(null);
+  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [streetViewPanorama, setStreetViewPanorama] =
+    useState<google.maps.StreetViewPanorama | null>(null);
 
-  // Utility function to get a random location within the boundary
-  const getRandomLocation = () => {
+  const streetViewLocationRef = useRef<google.maps.LatLng | null>(null);
+  const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
+  const [distance, setDistance] = useState<number | null>(null);
+  const [isStreetViewReady, setIsStreetViewReady] = useState(false);
+  const [currentRound, setCurrentRound] = useState(1);
+  const [streak, setStreak] = useState(0);
+  const [points, setPoints] = useState(0);
+  const [message, setMessage] = useState("");
+  const getRandomLocation = useMemo(() => {
     const latMin = Math.min(...boundaryCoordinates.map((coord) => coord.lat));
     const latMax = Math.max(...boundaryCoordinates.map((coord) => coord.lat));
     const lngMin = Math.min(...boundaryCoordinates.map((coord) => coord.lng));
     const lngMax = Math.max(...boundaryCoordinates.map((coord) => coord.lng));
 
-    return {
-      lat: latMin + Math.random() * (latMax - latMin),
-      lng: lngMin + Math.random() * (lngMax - lngMin),
+    return () =>
+      new window.google.maps.LatLng(
+        latMin + Math.random() * (latMax - latMin),
+        lngMin + Math.random() * (lngMax - lngMin)
+      );
+  }, []);
+
+  const validateStreetViewLocation = useCallback(
+    (location: google.maps.LatLng, callback: (valid: boolean) => void) => {
+      const streetViewService = new window.google.maps.StreetViewService();
+      streetViewService.getPanorama(
+        { location, radius: 50 },
+        (data, status) => {
+          callback(status === window.google.maps.StreetViewStatus.OK);
+        }
+      );
+    },
+    []
+  );
+
+  const resetRound = useCallback(() => {
+    markers.forEach((marker) => marker.setMap(null));
+    setMarkers([]);
+    setDistance(null);
+    setIsStreetViewReady(false);
+
+    const maxRetries = 10;
+    let attempt = 0;
+
+    const trySettingLocation = () => {
+      if (attempt >= maxRetries) {
+        console.error(
+          "Failed to find a valid Street View location after retries."
+        );
+        return;
+      }
+
+      const randomLocation = getRandomLocation();
+      attempt++;
+      validateStreetViewLocation(randomLocation, (isValid) => {
+        if (isValid && streetViewPanorama) {
+          streetViewPanorama.setPosition(randomLocation);
+          streetViewLocationRef.current = randomLocation;
+          setIsStreetViewReady(true);
+        } else {
+          trySettingLocation();
+        }
+      });
     };
+
+    trySettingLocation();
+  }, [getRandomLocation, streetViewPanorama, validateStreetViewLocation]);
+
+  const calculatePoints = async (distance: number) => {
+    const token = localStorage.getItem("x-auth-token");
+
+    try {
+      let response = await fetch("http://localhost:3011/api/game/play", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Inform server of JSON payload
+        },
+        body: JSON.stringify({
+          token: token,
+          distance: distance / 1000,
+          streak: streak,
+        }),
+        credentials: "include",
+      });
+
+      if (!response.ok) return;
+
+      let resultsObject = await response.json();
+
+      if (resultsObject.message == "Incorrect!") {
+        setDistance(distance);
+        setPoints(points + resultsObject.Points);
+        setStreak(0);
+        setMessage(resultsObject.message);
+        return;
+      }
+      if (resultsObject.message == "Correct!") {
+        setDistance(distance);
+        setPoints(points + resultsObject.Points);
+        setStreak(streak + 1);
+        setMessage(resultsObject.message);
+        return;
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
-    // Initialize the map
+    if (!mapRef.current || !streetViewRef.current) return;
+
     const googleMap = new window.google.maps.Map(mapRef.current, {
       center: { lat: 40.424, lng: -86.9212 },
       zoom: 15,
-      mapTypeId: "roadmap", // Use the original roadmap view
+      mapTypeId: "roadmap",
+      gestureHandling: "cooperative",
+      disableDefaultUI: false,
     });
 
-    // Draw the boundary
-    const boundary = new window.google.maps.Polygon({
-      paths: boundaryCoordinates,
-      strokeColor: "black",
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: "black",
-      fillOpacity: 0.1,
-      map: googleMap,
-    });
-
-    // Initialize the Street View panorama
-    const streetViewPanorama = new window.google.maps.StreetViewPanorama(streetViewRef.current, {
-      position: getRandomLocation(),
-      pov: { heading: 0, pitch: 0 },
-      zoom: 1,
-      addressControl: false,
-      fullscreenControl: true,
-    });
-
-    googleMap.setStreetView(streetViewPanorama);
+    const streetViewPanorama = new window.google.maps.StreetViewPanorama(
+      streetViewRef.current,
+      {
+        pov: { heading: 0, pitch: 0 },
+        zoom: 1,
+        addressControl: false,
+        fullscreenControl: true,
+      }
+    );
 
     setMap(googleMap);
-    setPanorama(streetViewPanorama);
+    setStreetViewPanorama(streetViewPanorama);
 
     return () => {
-      boundary.setMap(null);
+      streetViewPanorama.setVisible(false);
+      setMap(null);
     };
   }, []);
 
-  const handleMapClick = (event) => {
-    if (!map || markers.length >= 2) {
-      if (markers.length >= 2) alert("You can only select two locations.");
-      return;
-    }
-
-    const clickLatLng = { lat: event.latLng.lat(), lng: event.latLng.lng() };
-
-    // Check if the point is inside the boundary
-    const googleBoundary = new window.google.maps.Polygon({
-      paths: boundaryCoordinates,
-    });
-
-    if (
-      !window.google.maps.geometry.poly.containsLocation(
-        new window.google.maps.LatLng(clickLatLng),
-        googleBoundary
-      )
-    ) {
-      alert("Point is outside the valid region!");
-      return;
-    }
-
-    // Add marker
-    const newMarker = new window.google.maps.Marker({
-      position: clickLatLng,
-      map: map,
-    });
-
-    setMarkers((prevMarkers) => {
-      const updatedMarkers = [...prevMarkers, newMarker];
-
-      // If two markers are placed, draw the polyline and calculate distance
-      if (updatedMarkers.length === 2) {
-        const line = new window.google.maps.Polyline({
-          path: updatedMarkers.map((marker) => marker.getPosition()),
-          geodesic: true,
-          strokeColor: "black",
-          strokeOpacity: 1.0,
-          strokeWeight: 2,
-          map: map,
-        });
-
-        setPolyline(line);
-
-        const distanceInMeters = window.google.maps.geometry.spherical.computeDistanceBetween(
-          updatedMarkers[0].getPosition(),
-          updatedMarkers[1].getPosition()
-        );
-
-        setDistance(distanceInMeters);
-      }
-
-      return updatedMarkers;
-    });
-  };
-
-  const resetMap = () => {
-    // Clear markers
-    markers.forEach((marker) => marker.setMap(null));
-    setMarkers([]);
-
-    // Clear polyline
-    if (polyline) polyline.setMap(null);
-    setPolyline(null);
-
-    // Reset distance
-    setDistance(null);
-
-    // Set a new random location in Street View
-    if (panorama) {
-      panorama.setPosition(getRandomLocation());
-    }
-  };
-
-  const toggleMapEnlargement = () => {
-    setIsMapEnlarged((prev) => !prev);
-  };
+  useEffect(() => {
+    resetRound();
+  }, [currentRound, resetRound]);
 
   useEffect(() => {
-    if (map) {
-      // Add a click listener to the map
-      const listener = map.addListener("click", handleMapClick);
+    if (!map || !isStreetViewReady) return;
 
-      return () => {
-        window.google.maps.event.removeListener(listener);
-      };
-    }
-  }, [map, markers]);
+    const handleMapClick = (event: google.maps.MapMouseEvent) => {
+      const clickLatLng = event.latLng;
+      if (!clickLatLng || !streetViewLocationRef.current) return;
+
+      const marker = new window.google.maps.Marker({
+        position: clickLatLng,
+        map,
+      });
+
+      setMarkers((prevMarkers) => [...prevMarkers, marker]);
+
+      const distanceInMeters =
+        window.google.maps.geometry.spherical.computeDistanceBetween(
+          streetViewLocationRef.current,
+          clickLatLng
+        );
+
+      const distance = distanceInMeters;
+
+      calculatePoints(distance);
+    };
+
+    const clickListener = map.addListener("click", handleMapClick);
+
+    return () => {
+      window.google.maps.event.removeListener(clickListener);
+    };
+  }, [map, isStreetViewReady]);
 
   return (
     <div className="map-container">
-      {/* Fullscreen Street View */}
       <div ref={streetViewRef} className="street-view"></div>
+      <div ref={mapRef} className="map-view"></div>
+      {distance !== null && (
+        <ResultsOverlay
+          message={message}
+          setMessage={setMessage}
+          setStreak={setStreak}
+          setPoints={setPoints}
+          points={points}
+          streak={streak}
+          round={round}
+          distance={distance}
+          setRound={setRound}
+          streetViewLocation={streetViewLocationRef.current}
+          clickedLocation={markers[markers.length - 1].getPosition()}
+        />
+      )}
 
-      {/* Roadmap-style Map */}
-      <div
-        ref={mapRef}
-        className={`map-view ${isMapEnlarged ? "enlarged" : "small"}`}
-        onClick={toggleMapEnlargement}
-      ></div>
-
-      {/* Distance and Controls */}
-      <div className="controls">
-        {distance && (
-          <div>
-            Distance between the markers: {distance.toFixed(2)} meters
-          </div>
-        )}
-        <button onClick={resetMap}>Reset Map</button>
-      </div>
+      <div className="round-indicator">Round: {round}/5</div>
     </div>
   );
 };

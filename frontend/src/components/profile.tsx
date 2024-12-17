@@ -10,6 +10,7 @@ import { Button } from "../components/ui/button";
 import { Medal, Star, Trophy, Flame, MapPin, Target } from "lucide-react";
 import authHook from "../hooks/authHook";
 import { useNavigate } from "react-router-dom"; // Ensure you're using React Router for navigation
+import SearchBar from "../components/SeachBar";
 
 const ProfilePage = () => {
   const { loggedIn, user, logout } = authHook();
@@ -59,6 +60,7 @@ const ProfilePage = () => {
       {/* Header */}
       <header className="bg-black text-white p-4 border-b-4 border-yellow-500">
         <div className="container mx-auto flex justify-between items-center">
+          {/* Left Section */}
           <div className="flex items-center space-x-3">
             <MapPin className="h-8 w-8 text-yellow-500" />
             <div>
@@ -68,11 +70,31 @@ const ProfilePage = () => {
               </div>
             </div>
           </div>
+
+          {/* Center Section - SearchBar and View Leaderboard */}
+          <div className="flex items-center space-x-4 w-1/2">
+            <div className="flex-1">
+              <SearchBar />
+            </div>
+            <Button
+              className="bg-yellow-500 text-black hover:bg-yellow-600 transition-all px-4 py-2 rounded-md shadow-md"
+              onClick={() => navigate("/leaderboard")}
+            >
+              View Leaderboard!
+            </Button>
+          </div>
+
+          {/* Right Section - Placeholder (optional) */}
+          <div>
+            {/* Add other components here (e.g., buttons, icons, etc.) */}
+          </div>
         </div>
       </header>
 
+      {/* SearchBar Centered Below Header */}
+
       {/* Profile Content */}
-      <main className="container mx-auto px-4 py-16">
+      <main className="container mx-auto px-4 py-8">
         <div className="grid md:grid-cols-3 gap-8">
           {/* Profile Summary */}
           <Card className="md:col-span-1">
