@@ -32,8 +32,9 @@ router.post("/play", authLog, async (req, res) => {
 
     const distance = req.body.distance;
     const streak = req.body.streak;
+    const time = req.body.time;
 
-    const scoreObject = calculatePoints(distance);
+    const scoreObject = calculatePoints(distance, streak, time);
     console.log(scoreObject.correct);
 
     if (scoreObject.correct == true) {

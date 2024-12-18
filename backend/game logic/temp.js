@@ -21,13 +21,20 @@ export function calculateDistance(actualPoint, userPoint) {
 }
 
 // distance in km
-export function calculatePoints(distance) {
+export function calculatePoints(distance, streak, time) {
   console.log(distance);
   const maxDistance = 50;
+  let total = 0;
+  if (time > 5) {
+    let amtToSubtract = Math.floor((time-5) / 3);
+    total -= amtToSubtract * 200;
+  }
 
   if (distance < 0.2) {
+    streak += 1;
+    total += streak * 500;
     // close enough to perfect
-    return { points: 5000, correct: true };
+    return { points: total + 5000, correct: true };
   }
 
   if (distance > maxDistance) {
@@ -35,13 +42,9 @@ export function calculatePoints(distance) {
     return { points: 0, correct: false };
   }
 
-  const score = 5000 * (1 - distance / maxDistance);
-  return { points: Math.round(score), correct: false }; // round score
-}
-
-export function giveBonuses(streak, guessTime) {
-  let totalBonus = 0;
-  totalBonus += 100 * streak; // 100 points for each additional answer in a streak
-  totalBonus += Math.max(0, 50 * (guessTime - 7)); // if user guessed within 7 seconds, give them a bonus for 50 points for each second they guessed early
-  return totalBonus;
+  total += 5000 * (1 - distance / maxDistance);
+  if (total < 0) {
+    total = 0;
+  }
+  return { points: Math.round(total), correct: false }; // round score
 }
