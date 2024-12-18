@@ -21,6 +21,8 @@ const boundaryCoordinates = [
 ];
 
 const MapComponent = ({ setRound, round }: Props) => {
+  const [elapsedTime, setElapsedTime] = useState<number>(0);
+  const [startTime, setStartTime] = useState<number | null>(null);
   const mapRef = useRef<HTMLDivElement | null>(null);
   const streetViewRef = useRef<HTMLDivElement | null>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
@@ -85,6 +87,8 @@ const MapComponent = ({ setRound, round }: Props) => {
           streetViewPanorama.setPosition(randomLocation);
           streetViewLocationRef.current = randomLocation;
           setIsStreetViewReady(true);
+          setStartTime(Date.now()); // starts timer
+          setElapsedTime(0);
         } else {
           trySettingLocation();
         }
@@ -94,7 +98,7 @@ const MapComponent = ({ setRound, round }: Props) => {
     trySettingLocation();
   }, [getRandomLocation, streetViewPanorama, validateStreetViewLocation]);
 
-  const calculatePoints = async (distance: number) => {
+  const calculatePoints = async (distance: number, streak: number, elapsedTime: number) => {
     const token = localStorage.getItem("token");
 
     try {
@@ -107,6 +111,7 @@ const MapComponent = ({ setRound, round }: Props) => {
           token: token,
           distance: distance / 1000,
           streak: streak,
+          time: elapsedTime,
         }),
         credentials: "include",
       });
@@ -190,7 +195,13 @@ const MapComponent = ({ setRound, round }: Props) => {
 
       const distance = distanceInMeters;
 
-      calculatePoints(distance);
+      if (startTime != null) {
+        const time = (Date.now()- startTime) / 1000; // gets in seconds
+        setElapsedTime(time);
+        calculatePoints(distance, streak, time);
+      } else {
+        calculatePoints(distance, streak, elapsedTime);
+      }
     };
 
     const clickListener = map.addListener("click", handleMapClick);
@@ -219,7 +230,7 @@ const MapComponent = ({ setRound, round }: Props) => {
           clickedLocation={markers[markers.length - 1].getPosition()}
         />
       )}
-
+      <div>Time Elapsed: {elapsedTime.toFixed(2)} seconds</div>
       <div className="round-indicator">Round: {round}/5</div>
     </div>
   );
