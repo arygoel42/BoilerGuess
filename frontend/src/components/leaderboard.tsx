@@ -63,7 +63,7 @@ import { useNavigate } from "react-router-dom";
 
 const PurdueGeoguesserLeaderboard = () => {
   const navigate = useNavigate();
-  const [Users, setUsers] = useState();
+  const [Users, setUsers] = useState([]);
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [sortConfig, setSortConfig] = useState({
     key: "points",
@@ -73,13 +73,16 @@ const PurdueGeoguesserLeaderboard = () => {
 
   useEffect(() => {
     async function getUsers() {
-      const token = localStorage.getItem("x-auth-token");
+      const token = localStorage.getItem("token");
 
       try {
         let response = await fetch(
           "http://localhost:3011/api/game/getPlayers",
           {
             method: "POST",
+            headers: {
+              "Content-Type": "application/json", // Ensure server knows to parse JSON
+            },
             body: JSON.stringify({
               token: token,
             }),
@@ -237,7 +240,7 @@ const PurdueGeoguesserLeaderboard = () => {
                 </div>
                 <div className="flex items-center">
                   <Trophy className="mr-2 text-gold" />
-                  {user.achievements}
+                  {user.achievements.length}
                 </div>
                 <div className="flex items-center">
                   <Flame className="mr-2 text-black" />

@@ -10,19 +10,26 @@ const authHook = () => {
   const navigate = useNavigate();
 
   const checkAuth = async () => {
-    const token = localStorage.getItem("token");
-
     try {
+      const token = localStorage.getItem("token");
+      console.log(token);
+
       let response = await fetch("http://localhost:3011/api/users/profile", {
         method: "POST",
         credentials: "include",
-        body: JSON.stringify({ token }),
+        headers: {
+          "Content-Type": "application/json", // Ensure server knows to parse JSON
+        },
+        body: JSON.stringify({
+          token: token,
+        }),
       });
 
       if (response.status === 200) {
         let data = await response.json();
         setLoggedIn(true);
         setUser(data);
+        console.log(data);
       }
     } catch (error) {
       console.log(error);
@@ -43,6 +50,9 @@ const authHook = () => {
       let response = await fetch("http://localhost:3011/api/users/logout", {
         method: "POST",
         credentials: "include",
+        headers: {
+          "Content-Type": "application/json", // Ensure server knows to parse JSON
+        },
         body: JSON.stringify({ token }),
       });
 

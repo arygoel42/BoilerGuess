@@ -95,7 +95,7 @@ const MapComponent = ({ setRound, round }: Props) => {
   }, [getRandomLocation, streetViewPanorama, validateStreetViewLocation]);
 
   const calculatePoints = async (distance: number) => {
-    const token = localStorage.getItem("x-auth-token");
+    const token = localStorage.getItem("token");
 
     try {
       let response = await fetch("http://localhost:3011/api/game/play", {

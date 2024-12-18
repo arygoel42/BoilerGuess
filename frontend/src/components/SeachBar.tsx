@@ -14,7 +14,7 @@ const SearchBar = () => {
       return;
     }
 
-    const token = localStorage.getItem("x-auth-token");
+    const token = localStorage.getItem("token");
 
     try {
       setLoading(true);

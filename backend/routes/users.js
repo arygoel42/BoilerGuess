@@ -60,6 +60,8 @@ router.post("/profile", authLog, async (req, res) => {
 
     const authUser = await User.findOne({ _id: userID });
 
+    console.log(authUser + "authUser");
+
     if (!authUser) {
       return res.status(404).send({ message: "user not found" });
     }

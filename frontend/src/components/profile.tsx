@@ -17,38 +17,36 @@ const ProfilePage = () => {
   const navigate = useNavigate(); // React Router navigation hook
 
   if (!loggedIn) {
-    console.log(user);
-    return (
-      <div>
-        <h1>Log in to view your profile</h1>
-      </div>
-    );
+    console.log(loggedIn + "user");
+    navigate("/login");
+    return;
   }
 
   if (!user) {
     navigate("/login");
+    return;
   }
 
-  const achievements = [
-    {
-      icon: Medal,
-      name: "Campus Explorer",
-      description: "Discover campus locations",
-      progress: "3/10 locations",
-    },
-    {
-      icon: Trophy,
-      name: "Streak Master",
-      description: "Maintain consecutive daily play",
-      progress: "12 day streak",
-    },
-    {
-      icon: Star,
-      name: "Landmark Legend",
-      description: "Identify unique Purdue landmarks",
-      progress: "5/15 landmarks",
-    },
-  ];
+  // const achievements = [
+  //   {
+  //     icon: Medal,
+  //     name: "Campus Explorer",
+  //     description: "Discover campus locations",
+  //     progress: "3/10 locations",
+  //   },
+  //   {
+  //     icon: Trophy,
+  //     name: "Streak Master",
+  //     description: "Maintain consecutive daily play",
+  //     progress: "12 day streak",
+  //   },
+  //   {
+  //     icon: Star,
+  //     name: "Landmark Legend",
+  //     description: "Identify unique Purdue landmarks",
+  //     progress: "5/15 landmarks",
+  //   },
+  // ];
 
   // Start game handler
   const startGame = () => {
@@ -117,19 +115,19 @@ const ProfilePage = () => {
                   <span className="flex items-center">
                     <Star className="mr-2 text-yellow-500" /> Lifetime Points
                   </span>
-                  <span className="font-bold">0</span>
+                  <span className="font-bold">{user.points}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="flex items-center">
                     <Flame className="mr-2 text-red-500" /> Current Streak
                   </span>
-                  <span className="font-bold">0</span>
+                  <span className="font-bold">{user.streak}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="flex items-center">
                     <Target className="mr-2 text-green-500" /> Longest Streak
                   </span>
-                  <span className="font-bold">0</span>
+                  <span className="font-bold">Implmenent</span>
                 </div>
               </div>
 
@@ -160,13 +158,13 @@ const ProfilePage = () => {
             </CardHeader>
             <CardContent>
               <div className="grid md:grid-cols-2 gap-4">
-                {achievements.map((achievement, index) => (
+                {user.achievements.map((achievement, index) => (
                   <Card
                     key={index}
                     className="border-2 border-gray-200 hover:border-yellow-500 transition-all"
                   >
                     <CardContent className="flex items-center space-x-4 p-4">
-                      <achievement.icon className="h-12 w-12 text-yellow-500" />
+                      <achievement.icon className="h-8 w-8 text-yellow-500" />
                       <div>
                         <h3 className="font-bold">{achievement.name}</h3>
                         <p className="text-sm text-gray-600">

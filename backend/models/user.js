@@ -34,6 +34,7 @@ const userSchema = new mongoose.Schema({
   },
   achievements: [
     {
+      icon: { type: String, required: true },
       name: { type: String, required: true },
       description: { type: String, required: true },
       progress: { type: String, required: true },
@@ -50,24 +51,28 @@ userSchema.pre("save", function (next) {
   if (!this.achievements || this.achievements.length === 0) {
     this.achievements = [
       {
+        icon: "Trophy",
         name: "HardMode warrior",
         description:
           "Complete 5 games in hard mode and win 3000 points or more",
         progress: "0/5",
       },
       {
+        icon: "Medal",
         name: "Campus Explorer",
         description:
           "Complete 5 games in hard mode and win 3000 points or more",
         progress: "0/5",
       },
       {
+        icon: "Flame",
         name: "LandMark Warrior",
         description:
           "Complete 5 games in hard mode and win 3000 points or more",
         progress: "0/5",
       },
       {
+        icon: "Star",
         name: "Persistant champion",
         description:
           "Complete 5 games in hard mode and win 3000 points or more",
