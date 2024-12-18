@@ -14,6 +14,8 @@ router.post("/", (req, res) => {
   }
 });
 
+router.post("/playerDetails", authLog, async (req, res) => {});
+
 router.post("/signUp", async (req, res) => {
   // Validate the incoming request
   const { error } = validateUser(req.body);

@@ -50,6 +50,11 @@ export default {
           4: "hsl(var(--chart-4))",
           5: "hsl(var(--chart-5))",
         },
+        gold: {
+          DEFAULT: "hsl(var(--gold, 50 100% 50%))", // Gold with fallback
+          light: "hsl(var(--gold-light, 50 100% 60%))", // Light gold variant
+          dark: "hsl(var(--gold-dark, 50 100% 40%))", // Dark gold variant
+        },
       },
     },
   },

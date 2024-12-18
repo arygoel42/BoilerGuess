@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import ResultsOverlay from "../components/resultsOveray";
 import "../MapComponent.css";
+import useStore from "../Store/useStore";
 
 interface Props {
   setRound: (round: number) => void;
@@ -21,8 +22,12 @@ const boundaryCoordinates = [
 ];
 
 const MapComponent = ({ setRound, round }: Props) => {
+
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [startTime, setStartTime] = useState<number | null>(null);
+
+  const { totalPoints, setTotalPoints } = useStore();
+
   const mapRef = useRef<HTMLDivElement | null>(null);
   const streetViewRef = useRef<HTMLDivElement | null>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
@@ -123,6 +128,8 @@ const MapComponent = ({ setRound, round }: Props) => {
       if (resultsObject.message == "Incorrect!") {
         setDistance(distance);
         setPoints(points + resultsObject.Points);
+        setTotalPoints(totalPoints + resultsObject.Points);
+
         setStreak(0);
         setMessage(resultsObject.message);
         return;
@@ -130,10 +137,13 @@ const MapComponent = ({ setRound, round }: Props) => {
       if (resultsObject.message == "Correct!") {
         setDistance(distance);
         setPoints(points + resultsObject.Points);
+        setTotalPoints(totalPoints + resultsObject.Points);
         setStreak(streak + 1);
         setMessage(resultsObject.message);
         return;
       }
+
+      console.log(totalPoints);
     } catch (error) {
       console.error(error);
     }
