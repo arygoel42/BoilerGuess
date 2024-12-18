@@ -48,10 +48,3 @@ export function calculatePoints(distance, streak, time) {
   }
   return { points: Math.round(total), correct: false }; // round score
 }
-
-export function giveBonuses(streak, guessTime) {
-  let totalBonus = 0;
-  totalBonus += 100 * streak; // 100 points for each additional answer in a streak
-  totalBonus += Math.max(0, 50 * (guessTime - 7)); // if user guessed within 7 seconds, give them a bonus for 50 points for each second they guessed early
-  return totalBonus;
-}
