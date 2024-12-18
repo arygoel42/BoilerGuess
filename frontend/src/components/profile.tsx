@@ -7,7 +7,7 @@ import {
   CardDescription,
 } from "../components/ui/card";
 import { Button } from "../components/ui/button";
-import { Medal, Star, Trophy, Flame, MapPin, Target } from "lucide-react";
+import { Star, Target, Flame, MapPin } from "lucide-react";
 import authHook from "../hooks/authHook";
 import { useNavigate } from "react-router-dom"; // Ensure you're using React Router for navigation
 import SearchBar from "../components/SeachBar";
@@ -26,6 +26,15 @@ const ProfilePage = () => {
     navigate("/login");
     return;
   }
+
+  const dynamicComponent = ({ name }) => {
+    let cName: React.ComponentType<any> = Components[name.trim()];
+    if (!cName) {
+      return console.log("componnet not found");
+    }
+
+    return <cName className="h-8 w-8 text-yellow-500"></cName>;
+  };
 
   // const achievements = [
   //   {

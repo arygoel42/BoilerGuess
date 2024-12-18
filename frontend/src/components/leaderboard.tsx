@@ -100,6 +100,22 @@ const PurdueGeoguesserLeaderboard = () => {
     getUsers();
   }, []);
 
+  function handleAchievements(achievements) {
+    let achievementsCompleted = 0;
+
+    for (let i = 0; i < achievements.length; i++) {
+      const [numerator, denominator] = achievements[i].progress
+        .split("/")
+        .map(Number); // Split the "5/5" string and convert to numbers
+
+      if (numerator === denominator) {
+        achievementsCompleted++;
+      }
+    }
+
+    return achievementsCompleted;
+  }
+
   const sortData = (key) => {
     const direction =
       sortConfig.key === key && sortConfig.direction === "descending"
@@ -240,11 +256,11 @@ const PurdueGeoguesserLeaderboard = () => {
                 </div>
                 <div className="flex items-center">
                   <Trophy className="mr-2 text-gold" />
-                  {user.achievements.length}
+                  {handleAchievements(user.achievements)}
                 </div>
                 <div className="flex items-center">
                   <Flame className="mr-2 text-black" />
-                  {user.lifetimeStreak}
+                  {user.lifeTimeStreak}
                 </div>
               </div>
             </div>
