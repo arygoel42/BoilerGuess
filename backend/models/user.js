@@ -44,6 +44,10 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  Accuracy: {
+    type: Number,
+    default: 100,
+  },
 });
 
 // Initialize default achievements

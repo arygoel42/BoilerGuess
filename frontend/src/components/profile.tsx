@@ -27,15 +27,6 @@ const ProfilePage = () => {
     return;
   }
 
-  const dynamicComponent = ({ name }) => {
-    let cName: React.ComponentType<any> = Components[name.trim()];
-    if (!cName) {
-      return console.log("componnet not found");
-    }
-
-    return <cName className="h-8 w-8 text-yellow-500"></cName>;
-  };
-
   // const achievements = [
   //   {
   //     icon: Medal,
@@ -136,7 +127,7 @@ const ProfilePage = () => {
                   <span className="flex items-center">
                     <Target className="mr-2 text-green-500" /> Longest Streak
                   </span>
-                  <span className="font-bold">Implmenent</span>
+                  <span className="font-bold">{user.lifeTimeStreak}</span>
                 </div>
               </div>
 
@@ -173,7 +164,7 @@ const ProfilePage = () => {
                     className="border-2 border-gray-200 hover:border-yellow-500 transition-all"
                   >
                     <CardContent className="flex items-center space-x-4 p-4">
-                      <achievement.icon className="h-8 w-8 text-yellow-500" />
+                      <dynamicComponent name={"Trophy"} />
                       <div>
                         <h3 className="font-bold">{achievement.name}</h3>
                         <p className="text-sm text-gray-600">

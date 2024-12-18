@@ -59,11 +59,11 @@ router.post("/play", authLog, async (req, res) => {
 router.post("/End", authLog, async (req, res) => {
   //update liftime points
 
-  const currentUser = User.findOne({ _id: req.user._id });
+  const currentUser = await User.findOne({ _id: req.user._id });
   if (!currentUser) {
     return res.status(500).send("user not found in databse");
   }
-  const points = req.body.point;
+  const points = req.body.points;
   const streak = req.body.streak;
 
   currentUser.streak = streak;
