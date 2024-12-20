@@ -13,7 +13,7 @@ import ProfileDetail from "../components/ProfileDetail";
 
 const router = createBrowserRouter([
   {
-    path: "/game",
+    path: "/game/:mode",
     element: React.createElement(GamePage),
   },
   {

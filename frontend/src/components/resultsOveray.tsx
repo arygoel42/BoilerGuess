@@ -32,6 +32,9 @@ const ResultsOverlay: React.FC<ResultsOverlayProps> = ({
     setTotalPoints,
     setTotalTime,
     setFinalStreak,
+    setAccuracy,
+    Accuracy,
+    hardMode,
   } = useStore();
   const miniMapRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -104,9 +107,10 @@ const ResultsOverlay: React.FC<ResultsOverlayProps> = ({
   }, [streetViewLocation, clickedLocation]);
 
   const finishGame = async () => {
-    setFinalStreak(streak);
-
     const token = localStorage.getItem("token");
+    const updatedStreak = FinalStreak + 1;
+    setFinalStreak(updatedStreak);
+    setAccuracy(Accuracy / 5);
 
     try {
       let response = await fetch("http://localhost:3011/api/game/End", {
@@ -118,7 +122,9 @@ const ResultsOverlay: React.FC<ResultsOverlayProps> = ({
         body: JSON.stringify({
           token: token,
           points: totalPoints,
-          streak: streak,
+          streak: updatedStreak,
+          Accuracy: Accuracy,
+          hardMode: hardMode,
         }),
       });
 

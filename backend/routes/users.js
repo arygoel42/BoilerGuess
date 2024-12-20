@@ -14,7 +14,18 @@ router.post("/", (req, res) => {
   }
 });
 
-router.post("/playerDetails", authLog, async (req, res) => {});
+router.post("/playerDetails", authLog, async (req, res) => {
+  const username = req.body.username;
+
+  try {
+    const player = await User.findOne({ username: username });
+    return res.status(200).send(player);
+  } catch (error) {
+    return res.status(500).send({ message: "error with databse retrieval" });
+  }
+
+  const player = await User.findOne({ username: username });
+});
 
 router.post("/signUp", async (req, res) => {
   // Validate the incoming request

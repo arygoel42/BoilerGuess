@@ -9,15 +9,19 @@ import {
 } from "lucide-react";
 import useStore from "../Store/useStore";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const FinishPage = () => {
   const {
+    totalTime,
     totalPoints,
     FinalStreak,
     setFinalStreak,
     setTotalTime,
     setAccuracy,
     setTotalPoints,
+    Accuracy,
+    hardMode,
   } = useStore();
   const navigate = useNavigate();
   // Mock data - in real implementation, these would be passed as props
@@ -36,7 +40,12 @@ const FinishPage = () => {
     setAccuracy(0);
     setTotalTime(0);
 
-    navigate("/game");
+    if (hardMode) {
+      navigate("/game/Hard");
+      return;
+    }
+
+    navigate("/game/Normal");
   };
 
   const handleBack = () => {
@@ -85,12 +94,12 @@ const FinishPage = () => {
             <div className="bg-muted p-4 rounded-xl text-center">
               <Clock className="mx-auto mb-2 text-primary" />
               <h4 className="font-semibold">Total Time</h4>
-              <p className="text-lg">{gameStats.totalTime}</p>
+              <p className="text-lg">{totalTime}</p>
             </div>
             <div className="bg-muted p-4 rounded-xl text-center">
               <ChartLine className="mx-auto mb-2 text-primary" />
               <h4 className="font-semibold">Accuracy</h4>
-              <p className="text-lg">{gameStats.averageAccuracy}%</p>
+              <p className="text-lg">{Accuracy}%</p>
             </div>
             <div className="bg-muted p-4 rounded-xl text-center">
               <Trophy className="mx-auto mb-2 text-primary" />

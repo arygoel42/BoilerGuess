@@ -40,6 +40,16 @@ const userSchema = new mongoose.Schema({
       progress: { type: String, required: true },
     },
   ],
+
+  achievementsCompleted: [
+    {
+      icon: { type: String, required: true },
+      name: { type: String, required: true },
+      description: { type: String, required: true },
+      progress: { type: String, required: true },
+    },
+  ],
+
   gamesPlayed: {
     type: Number,
     default: 0,
@@ -52,34 +62,59 @@ const userSchema = new mongoose.Schema({
 
 // Initialize default achievements
 userSchema.pre("save", function (next) {
-  if (!this.achievements || this.achievements.length === 0) {
+  if (
+    !this.achievements ||
+    this.achievements.length === 4 ||
+    this.achievements.length === 0
+  ) {
     this.achievements = [
       {
         icon: "Trophy",
         name: "HardMode warrior",
-        description:
-          "Complete 5 games in hard mode and win 3000 points or more",
+        description: "Complete 5 games in hard mode",
         progress: "0/5",
       },
       {
         icon: "Medal",
         name: "Campus Explorer",
-        description:
-          "Complete 5 games in hard mode and win 3000 points or more",
-        progress: "0/5",
+        description: "Complete 10 games!",
+        progress: "0/10",
       },
       {
         icon: "Flame",
         name: "LandMark Warrior",
-        description:
-          "Complete 5 games in hard mode and win 3000 points or more",
+        description: "Complete 5 games on Normal Mode!",
         progress: "0/5",
       },
       {
         icon: "Star",
         name: "Persistant champion",
+        description: "Complete 15 games in hard mode!",
+        progress: "0/15",
+      },
+      {
+        icon: "Star",
+        name: "Accuracy King",
+        description: "achieve a 90% overall accuracy! ",
+        progress: "0/1",
+      },
+      {
+        icon: "Star",
+        name: "Speed Demon",
         description:
-          "Complete 5 games in hard mode and win 3000 points or more",
+          "Complete a game in under 1 minute and win 17000 points or more",
+        progress: "0/5",
+      },
+      {
+        icon: "Star",
+        name: "King!",
+        description: "1,000,000 points or more!",
+        progress: "0/5",
+      },
+      {
+        icon: "Star",
+        name: "Heir to the throne!",
+        description: "100,000 points or more!",
         progress: "0/5",
       },
     ];

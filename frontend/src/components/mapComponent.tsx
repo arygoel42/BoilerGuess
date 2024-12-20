@@ -8,6 +8,7 @@ import React, {
 import ResultsOverlay from "../components/resultsOveray";
 import "../MapComponent.css";
 import useStore from "../Store/useStore";
+import { useParams } from "react-router-dom";
 
 interface Props {
   setRound: (round: number) => void;
@@ -22,11 +23,24 @@ const boundaryCoordinates = [
 ];
 
 const MapComponent = ({ setRound, round }: Props) => {
-
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [startTime, setStartTime] = useState<number | null>(null);
 
-  const { totalPoints, setTotalPoints } = useStore();
+  const { mode } = useParams();
+
+  const {
+    totalPoints,
+    setTotalPoints,
+    totalTime,
+    setTotalTime,
+    FinalStreak,
+    setFinalStreak,
+    streak,
+    setStreak,
+    Accuracy,
+    setAccuracy,
+    setMode,
+  } = useStore();
 
   const mapRef = useRef<HTMLDivElement | null>(null);
   const streetViewRef = useRef<HTMLDivElement | null>(null);
@@ -34,12 +48,24 @@ const MapComponent = ({ setRound, round }: Props) => {
   const [streetViewPanorama, setStreetViewPanorama] =
     useState<google.maps.StreetViewPanorama | null>(null);
 
+  const locationsNormal = [
+    { latitude: 40.4274, longitude: -86.9137 },
+    { latitude: 40.4247, longitude: -86.911 },
+    { latitude: 40.4258, longitude: -86.9115 },
+    { latitude: 40.4284, longitude: -86.9122 },
+    { latitude: 40.4349, longitude: -86.9159 },
+    { latitude: 40.4354, longitude: -86.9196 },
+    { latitude: 40.4255, longitude: -86.9123 },
+    { latitude: 40.4253, longitude: -86.925 },
+    { latitude: 40.4276, longitude: -86.9176 },
+    { latitude: 40.4285, longitude: -86.9135 },
+  ];
+
   const streetViewLocationRef = useRef<google.maps.LatLng | null>(null);
   const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
   const [distance, setDistance] = useState<number | null>(null);
   const [isStreetViewReady, setIsStreetViewReady] = useState(false);
   const [currentRound, setCurrentRound] = useState(1);
-  const [streak, setStreak] = useState(0);
   const [points, setPoints] = useState(0);
   const [message, setMessage] = useState("");
   const getRandomLocation = useMemo(() => {
@@ -84,8 +110,17 @@ const MapComponent = ({ setRound, round }: Props) => {
         );
         return;
       }
-
-      const randomLocation = getRandomLocation();
+      let randomLocation = null;
+      if (mode === "Normal") {
+        const randomIndex = Math.floor(Math.random() * locationsNormal.length);
+        randomLocation = new window.google.maps.LatLng(
+          locationsNormal[randomIndex].latitude,
+          locationsNormal[randomIndex].longitude
+        );
+      } else if (mode === "Hard") {
+        randomLocation = getRandomLocation();
+        setMode(true);
+      }
       attempt++;
       validateStreetViewLocation(randomLocation, (isValid) => {
         if (isValid && streetViewPanorama) {
@@ -103,7 +138,7 @@ const MapComponent = ({ setRound, round }: Props) => {
     trySettingLocation();
   }, [getRandomLocation, streetViewPanorama, validateStreetViewLocation]);
 
-  const calculatePoints = async (distance: number, streak: number, elapsedTime: number) => {
+  const calculatePoints = async (distance: number, elapsedTime: number) => {
     const token = localStorage.getItem("token");
 
     try {
@@ -129,17 +164,26 @@ const MapComponent = ({ setRound, round }: Props) => {
         setDistance(distance);
         setPoints(points + resultsObject.Points);
         setTotalPoints(totalPoints + resultsObject.Points);
-
+        setTotalTime(totalTime + elapsedTime);
+        setAccuracy(Accuracy + resultsObject.accuracy);
         setStreak(0);
         setMessage(resultsObject.message);
+        console.log(totalTime);
         return;
       }
       if (resultsObject.message == "Correct!") {
         setDistance(distance);
         setPoints(points + resultsObject.Points);
         setTotalPoints(totalPoints + resultsObject.Points);
+        setTotalTime(totalTime + elapsedTime);
+        setAccuracy(Accuracy + resultsObject.accuracy);
+
         setStreak(streak + 1);
+        if (streak > FinalStreak) {
+          setFinalStreak(streak);
+        }
         setMessage(resultsObject.message);
+        console.log(totalTime);
         return;
       }
 
@@ -206,11 +250,11 @@ const MapComponent = ({ setRound, round }: Props) => {
       const distance = distanceInMeters;
 
       if (startTime != null) {
-        const time = (Date.now()- startTime) / 1000; // gets in seconds
+        const time = (Date.now() - startTime) / 1000; // gets in seconds
         setElapsedTime(time);
-        calculatePoints(distance, streak, time);
+        calculatePoints(distance, time);
       } else {
-        calculatePoints(distance, streak, elapsedTime);
+        calculatePoints(distance, elapsedTime);
       }
     };
 

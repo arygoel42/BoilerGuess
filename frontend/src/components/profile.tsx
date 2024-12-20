@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -7,14 +7,17 @@ import {
   CardDescription,
 } from "../components/ui/card";
 import { Button } from "../components/ui/button";
-import { Star, Target, Flame, MapPin } from "lucide-react";
+import { Star, Target, Flame, MapPin, Trophy } from "lucide-react";
 import authHook from "../hooks/authHook";
-import { useNavigate } from "react-router-dom"; // Ensure you're using React Router for navigation
+import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/SeachBar";
 
 const ProfilePage = () => {
   const { loggedIn, user, logout } = authHook();
-  const navigate = useNavigate(); // React Router navigation hook
+  const navigate = useNavigate();
+
+  const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
+  const [aList, setAList] = useState([]);
 
   if (!loggedIn) {
     console.log(loggedIn + "user");
@@ -27,30 +30,15 @@ const ProfilePage = () => {
     return;
   }
 
-  // const achievements = [
-  //   {
-  //     icon: Medal,
-  //     name: "Campus Explorer",
-  //     description: "Discover campus locations",
-  //     progress: "3/10 locations",
-  //   },
-  //   {
-  //     icon: Trophy,
-  //     name: "Streak Master",
-  //     description: "Maintain consecutive daily play",
-  //     progress: "12 day streak",
-  //   },
-  //   {
-  //     icon: Star,
-  //     name: "Landmark Legend",
-  //     description: "Identify unique Purdue landmarks",
-  //     progress: "5/15 landmarks",
-  //   },
-  // ];
-
-  // Start game handler
+  // setAList(user.achievementsCompleted   + user.achievements)
+  // Function to handle the modal close and start game
   const startGame = () => {
-    navigate("/game"); // Change "/game" to your game's start route
+    setIsModalOpen(true); // Open the modal when Start Game is clicked
+  };
+
+  const handleStartGame = (mode) => {
+    setIsModalOpen(false); // Close the modal
+    navigate(`/game/${mode}`); // Navigate to the /game route with the selected mode
   };
 
   return (
@@ -58,7 +46,6 @@ const ProfilePage = () => {
       {/* Header */}
       <header className="bg-black text-white p-4 border-b-4 border-yellow-500">
         <div className="container mx-auto flex justify-between items-center">
-          {/* Left Section */}
           <div className="flex items-center space-x-3">
             <MapPin className="h-8 w-8 text-yellow-500" />
             <div>
@@ -69,7 +56,6 @@ const ProfilePage = () => {
             </div>
           </div>
 
-          {/* Center Section - SearchBar and View Leaderboard */}
           <div className="flex items-center space-x-4 w-1/2">
             <div className="flex-1">
               <SearchBar />
@@ -81,20 +67,12 @@ const ProfilePage = () => {
               View Leaderboard!
             </Button>
           </div>
-
-          {/* Right Section - Placeholder (optional) */}
-          <div>
-            {/* Add other components here (e.g., buttons, icons, etc.) */}
-          </div>
         </div>
       </header>
-
-      {/* SearchBar Centered Below Header */}
 
       {/* Profile Content */}
       <main className="container mx-auto px-4 py-8">
         <div className="grid md:grid-cols-3 gap-8">
-          {/* Profile Summary */}
           <Card className="md:col-span-1">
             <CardHeader>
               <CardTitle>Profile</CardTitle>
@@ -131,7 +109,6 @@ const ProfilePage = () => {
                 </div>
               </div>
 
-              {/* Start Game Button */}
               <Button
                 className="w-full bg-green-500 hover:bg-green-600"
                 onClick={startGame}
@@ -148,7 +125,6 @@ const ProfilePage = () => {
             </CardContent>
           </Card>
 
-          {/* Achievements */}
           <Card className="md:col-span-2">
             <CardHeader>
               <CardTitle>Achievements</CardTitle>
@@ -164,7 +140,10 @@ const ProfilePage = () => {
                     className="border-2 border-gray-200 hover:border-yellow-500 transition-all"
                   >
                     <CardContent className="flex items-center space-x-4 p-4">
-                      <dynamicComponent name={"Trophy"} />
+                      <Trophy
+                        name={"Trophy"}
+                        className="h-8 w-8 text-yellow-500"
+                      />
                       <div>
                         <h3 className="font-bold">{achievement.name}</h3>
                         <p className="text-sm text-gray-600">
@@ -182,6 +161,49 @@ const ProfilePage = () => {
           </Card>
         </div>
       </main>
+
+      {/* Modal Overlay */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+            <h2 className="text-xl font-bold mb-4">Select Game Mode</h2>
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-lg font-semibold">Normal Mode</h3>
+                <p>
+                  Play the classic GeoGuesser game with standard rules. Designed
+                  for those who are new to campus!
+                </p>
+                <Button
+                  className="w-full bg-blue-500 hover:bg-blue-600 mt-2"
+                  onClick={() => handleStartGame("Normal")}
+                >
+                  Start Normal Mode
+                </Button>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold">Exploration Mode</h3>
+                <p>
+                  Challenge yourself to find as many locations as you can in a
+                  short amount of time. Designed for those who are experienced!
+                </p>
+                <Button
+                  className="w-full bg-green-500 hover:bg-green-600 mt-2"
+                  onClick={() => handleStartGame("Hard")}
+                >
+                  Start Hard Mode
+                </Button>
+              </div>
+            </div>
+            <Button
+              className="w-full mt-4 bg-gray-500 hover:bg-gray-600"
+              onClick={() => setIsModalOpen(false)}
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
