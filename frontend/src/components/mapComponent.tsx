@@ -50,16 +50,25 @@ const MapComponent = ({ setRound, round }: Props) => {
     useState<google.maps.StreetViewPanorama | null>(null);
 
   const locationsNormal = [
-    { latitude: 40.4275, longitude: -86.9138 }, // Adjusted near Northwestern Ave
-    { latitude: 40.4248, longitude: -86.9109 }, // Adjusted near Grant St
-    { latitude: 40.426, longitude: -86.9114 }, // Adjusted near State St
-    { latitude: 40.4283, longitude: -86.9121 }, // Adjusted near Marsteller St
-    { latitude: 40.4348, longitude: -86.9158 }, // Adjusted near Stadium Ave
-    { latitude: 40.4355, longitude: -86.9195 }, // Adjusted near Tower Dr
-    { latitude: 40.4256, longitude: -86.9124 }, // Adjusted near Wood St
-    { latitude: 40.4254, longitude: -86.9249 }, // Adjusted near University St
-    { latitude: 40.4277, longitude: -86.9177 }, // Adjusted near South St
-    { latitude: 40.4286, longitude: -86.9136 }, // Adjusted near Tapawingo Park
+    { latitude: 40.424, longitude: -86.9105 }, // PMU Purdue Grand Entrance
+    { latitude: 40.4259, longitude: -86.9138 }, // Witherell Oval Drive
+    { latitude: 40.4268, longitude: -86.9134 }, // Near State St
+    { latitude: 40.4275, longitude: -86.9157 }, // Northwestern Ave
+    { latitude: 40.4303, longitude: -86.9167 }, // Near Stadium Ave
+    { latitude: 40.4333, longitude: -86.9191 }, // Tower Dr
+    { latitude: 40.4314, longitude: -86.9191 }, // University St
+    { latitude: 40.4286, longitude: -86.9217 }, // Near Wood St
+    { latitude: 40.4277, longitude: -86.9276 }, // Tapawingo Park
+    { latitude: 40.4283, longitude: -86.9121 }, // Near Marsteller St
+    { latitude: 40.4355, longitude: -86.9195 }, // Purdue Memorial Mall
+    { latitude: 40.4256, longitude: -86.9124 }, // WALC (Wilmeth Active Learning Center)
+    { latitude: 40.4292, longitude: -86.9216 }, // Purdue Rec Sports (Co-Rec)
+    { latitude: 40.4248, longitude: -86.9109 }, // Engineering Fountain
+    { latitude: 40.4271, longitude: -86.9114 }, // Beering Hall
+    { latitude: 40.4281, longitude: -86.9137 }, // Armstrong Hall
+    { latitude: 40.4284, longitude: -86.9178 }, // Neil Armstrong Statue
+    { latitude: 40.4245, longitude: -86.918 }, // Hicks Undergraduate Library
+    { latitude: 40.4247, longitude: -86.9097 }, // Purdue Union Club Hotel
   ];
 
   const streetViewLocationRef = useRef<google.maps.LatLng | null>(null);

@@ -12,62 +12,12 @@ import {
 import SearchBar from "../components/SeachBar";
 import { useNavigate } from "react-router-dom";
 
-// Sample data - in a real app, this would come from your backend
-// const sampleLeaderboardData = [
-//   {
-//     id: 1,
-//     username: "PurduePete",
-//     points: 5420,
-//     gamesPlayed: 87,
-//     achievements: 12,
-//     streak: 8,
-//     avatar: "/api/placeholder/50/50",
-//   },
-//   {
-//     id: 2,
-//     username: "BoilerMaker22",
-//     points: 4890,
-//     gamesPlayed: 72,
-//     achievements: 9,
-//     streak: 5,
-//     avatar: "/api/placeholder/50/50",
-//   },
-//   {
-//     id: 3,
-//     username: "Campus_Explorer",
-//     points: 4350,
-//     gamesPlayed: 65,
-//     achievements: 7,
-//     streak: 6,
-//     avatar: "/api/placeholder/50/50",
-//   },
-//   {
-//     id: 4,
-//     username: "GeoNerd",
-//     points: 3980,
-//     gamesPlayed: 58,
-//     achievements: 6,
-//     streak: 4,
-//     avatar: "/api/placeholder/50/50",
-//   },
-//   {
-//     id: 5,
-//     username: "MapMaster",
-//     points: 3650,
-//     gamesPlayed: 52,
-//     achievements: 5,
-//     streak: 3, //lifetimeStreak
-//     avatar: "/api/placeholder/50/50",
-//   },
-// ];
-
 const PurdueGeoguesserLeaderboard = () => {
   const navigate = useNavigate();
-  const [Users, setUsers] = useState([]);
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [sortConfig, setSortConfig] = useState({
     key: "points",
-    direction: "descending",
+    direction: "ascending",
   });
   const [hoveredUser, setHoveredUser] = useState(null);
 
@@ -81,40 +31,34 @@ const PurdueGeoguesserLeaderboard = () => {
           {
             method: "POST",
             headers: {
-              "Content-Type": "application/json", // Ensure server knows to parse JSON
+              "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-              token: token,
-            }),
+            body: JSON.stringify({ token }),
             credentials: "include",
           }
         );
 
-        let Players = await response.json();
-        setLeaderboardData(Players);
-        console.log(Users + "USrs");
+        let players = await response.json();
+
+        // Add derived field `completedAchievements`
+        players = players.map((player) => ({
+          ...player,
+          completedAchievements: player.achievements
+            ? player.achievements.filter((a) => a.progress === "Completed!")
+                .length
+            : 0,
+        }));
+
+        // Sort by points (ascending) by default
+        players.sort((a, b) => b.points - a.points);
+
+        setLeaderboardData(players);
       } catch (error) {
         console.error(error);
       }
     }
     getUsers();
   }, []);
-
-  function handleAchievements(achievements) {
-    let achievementsCompleted = 0;
-
-    for (let i = 0; i < achievements.length; i++) {
-      const [numerator, denominator] = achievements[i].progress
-        .split("/")
-        .map(Number); // Split the "5/5" string and convert to numbers
-
-      if (numerator === denominator) {
-        achievementsCompleted++;
-      }
-    }
-
-    return achievementsCompleted;
-  }
 
   const sortData = (key) => {
     const direction =
@@ -182,37 +126,39 @@ const PurdueGeoguesserLeaderboard = () => {
 
         <div className="p-4 bg-gray-100 flex justify-between items-center">
           <div className="flex space-x-4">
-            {["points", "gamesPlayed", "achievements", "streak"].map((key) => (
-              <button
-                key={key}
-                onClick={() => sortData(key)}
-                className="flex items-center hover:bg-gold-100 p-2 rounded-md transition-colors duration-300 group"
-              >
-                {key === "points" && (
-                  <Trophy className="mr-2 text-gold group-hover:scale-110 transition-transform" />
-                )}
-                {key === "gamesPlayed" && (
-                  <GamepadIcon className="mr-2 text-gold group-hover:scale-110 transition-transform" />
-                )}
-                {key === "achievements" && (
-                  <Trophy className="mr-2 text-gold group-hover:scale-110 transition-transform" />
-                )}
-                {key === "streak" && (
-                  <Flame className="mr-2 text-gold group-hover:scale-110 transition-transform" />
-                )}
+            {["points", "gamesPlayed", "completedAchievements", "streak"].map(
+              (key) => (
+                <button
+                  key={key}
+                  onClick={() => sortData(key)}
+                  className="flex items-center hover:bg-gold-100 p-2 rounded-md transition-colors duration-300 group"
+                >
+                  {key === "points" && (
+                    <Trophy className="mr-2 text-gold group-hover:scale-110 transition-transform" />
+                  )}
+                  {key === "gamesPlayed" && (
+                    <GamepadIcon className="mr-2 text-gold group-hover:scale-110 transition-transform" />
+                  )}
+                  {key === "completedAchievements" && (
+                    <Trophy className="mr-2 text-gold group-hover:scale-110 transition-transform" />
+                  )}
+                  {key === "streak" && (
+                    <Flame className="mr-2 text-gold group-hover:scale-110 transition-transform" />
+                  )}
 
-                {key.replace(/([A-Z])/g, " $1").replace(/^./, function (str) {
-                  return str.toUpperCase();
-                })}
+                  {key.replace(/([A-Z])/g, " $1").replace(/^./, function (str) {
+                    return str.toUpperCase();
+                  })}
 
-                {sortConfig.key === key &&
-                  (sortConfig.direction === "descending" ? (
-                    <ChevronDown className="ml-1 text-black" />
-                  ) : (
-                    <ChevronUp className="ml-1 text-black" />
-                  ))}
-              </button>
-            ))}
+                  {sortConfig.key === key &&
+                    (sortConfig.direction === "descending" ? (
+                      <ChevronDown className="ml-1 text-black" />
+                    ) : (
+                      <ChevronUp className="ml-1 text-black" />
+                    ))}
+                </button>
+              )
+            )}
           </div>
         </div>
 
@@ -256,7 +202,7 @@ const PurdueGeoguesserLeaderboard = () => {
                 </div>
                 <div className="flex items-center">
                   <Trophy className="mr-2 text-gold" />
-                  {handleAchievements(user.achievements)}
+                  {user.completedAchievements}
                 </div>
                 <div className="flex items-center">
                   <Flame className="mr-2 text-black" />

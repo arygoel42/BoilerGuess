@@ -70,10 +70,18 @@ router.post("/End", authLog, async (req, res) => {
   const points = req.body.points;
   const streak = req.body.streak;
   console.log(
-    streak + "streak" + currentUser.lifeTimeStreak + "lifetimestreak"
+    streak +
+      "streak" +
+      currentUser.lifeTimeStreak +
+      "lifetimestreak" +
+      "time  : " +
+      req.body.time +
+      "ACcuracy " +
+      req.body.Accuracy
   );
   const hardMode = req.body.hardMode;
   const time = req.body.time;
+  console.log(time + "TIME");
 
   currentUser.streak = streak;
 
@@ -96,6 +104,10 @@ router.post("/End", authLog, async (req, res) => {
         numerator++;
         currentUser.achievements[i].progress = `${numerator}/10`;
       }
+    }
+
+    if (currentUser.achievements[i].progress == "10/10") {
+      currentUser.achievements[i].progress = "Completed!";
     }
   }
 
@@ -171,15 +183,15 @@ router.post("/End", authLog, async (req, res) => {
     }
   }
 
-  if (time < 60 + points > 17000) {
+  if (time < 60 && points > 17000) {
     for (let i = 0; i < currentUser.achievements.length; i++) {
-      if (currentUser.achievements[i].name == "Speed King") {
+      if (currentUser.achievements[i].name == "Speed Demon") {
         currentUser.achievements[i].progress = "Completed!";
       }
     }
   }
 
-  if (points > 1000000) {
+  if (currentUser.points > 1000000) {
     for (let i = 0; i < currentUser.achievements.length; i++) {
       if (currentUser.achievements[i].name == "King!") {
         currentUser.achievements[i].progress = "Completed!";
@@ -187,7 +199,7 @@ router.post("/End", authLog, async (req, res) => {
     }
   }
 
-  if (points > 100000) {
+  if (currentUser.points > 100000) {
     for (let i = 0; i < currentUser.achievements.length; i++) {
       if (currentUser.achievements[i].name == "Heir to the throne!") {
         currentUser.achievements[i].progress = "Completed!";

@@ -11,6 +11,7 @@ import { Star, Target, Flame, MapPin, Trophy } from "lucide-react";
 import authHook from "../hooks/authHook";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/SeachBar";
+import AccuracyGauge from "./AccuracyGauge";
 
 const ProfilePage = () => {
   const { loggedIn, user, logout } = authHook();
@@ -104,6 +105,9 @@ const ProfilePage = () => {
                     <Target className="mr-2 text-green-500" /> Longest Streak
                   </span>
                   <span className="font-bold">{user.lifeTimeStreak}</span>
+                </div>
+                <div className="flex justify-center py-2">
+                  <AccuracyGauge accuracy={user.Accuracy} />
                 </div>
               </div>
 

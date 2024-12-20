@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { Medal, Map, Target, Flame, Trophy } from "lucide-react";
 import useStore from "../Store/useStore";
 
 interface ResultsOverlayProps {
@@ -42,7 +43,6 @@ const ResultsOverlay: React.FC<ResultsOverlayProps> = ({
   useEffect(() => {
     if (!miniMapRef.current) return;
 
-    // Create mini map centered between street view and clicked locations
     const midpoint = new window.google.maps.LatLng(
       (streetViewLocation.lat() + clickedLocation.lat()) / 2,
       (streetViewLocation.lng() + clickedLocation.lng()) / 2
@@ -56,16 +56,15 @@ const ResultsOverlay: React.FC<ResultsOverlayProps> = ({
       gestureHandling: "none",
     });
 
-    // Add markers for street view and clicked locations
     const streetViewMarker = new window.google.maps.Marker({
       position: streetViewLocation,
       map: miniMap,
       icon: {
         path: window.google.maps.SymbolPath.CIRCLE,
         scale: 8,
-        fillColor: "#0000FF",
+        fillColor: "#22C55E",
         fillOpacity: 0.8,
-        strokeColor: "#0000FF",
+        strokeColor: "#22C55E",
         strokeWeight: 2,
       },
     });
@@ -76,24 +75,22 @@ const ResultsOverlay: React.FC<ResultsOverlayProps> = ({
       icon: {
         path: window.google.maps.SymbolPath.CIRCLE,
         scale: 8,
-        fillColor: "#FF0000",
+        fillColor: "#EF4444",
         fillOpacity: 0.8,
-        strokeColor: "#FF0000",
+        strokeColor: "#EF4444",
         strokeWeight: 2,
       },
     });
 
-    // Draw a line between the two points
     const distanceLine = new window.google.maps.Polyline({
       path: [streetViewLocation, clickedLocation],
       geodesic: true,
-      strokeColor: "#FF0000",
+      strokeColor: "#6B7280",
       strokeOpacity: 0.8,
-      strokeWeight: 3,
+      strokeWeight: 2,
       map: miniMap,
     });
 
-    // Fit bounds to show both markers
     const bounds = new window.google.maps.LatLngBounds();
     bounds.extend(streetViewLocation);
     bounds.extend(clickedLocation);
@@ -110,21 +107,23 @@ const ResultsOverlay: React.FC<ResultsOverlayProps> = ({
     const token = localStorage.getItem("token");
     const updatedStreak = FinalStreak + 1;
     setFinalStreak(updatedStreak);
+    const updatedAccuracy = Accuracy / 5;
     setAccuracy(Accuracy / 5);
 
     try {
       let response = await fetch("http://localhost:3011/api/game/End", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json", // Inform server of JSON payload
+          "Content-Type": "application/json",
         },
         credentials: "include",
         body: JSON.stringify({
           token: token,
           points: totalPoints,
           streak: updatedStreak,
-          Accuracy: Accuracy,
+          Accuracy: updatedAccuracy,
           hardMode: hardMode,
+          time: totalTime,
         }),
       });
 
@@ -137,52 +136,75 @@ const ResultsOverlay: React.FC<ResultsOverlayProps> = ({
   };
 
   return (
-    <div style={overlayStyle}>
-      <div style={overlayContentStyle}>
-        <h2>Round Results</h2>
-        <p>Message : {message}</p>
-        <p>Distance to target: {(distance / 1000).toFixed(2)} km</p>
-        <p>points : {points}</p>
-        <p>streak : {streak}</p>
-        <div
-          ref={miniMapRef}
-          style={{
-            width: "300px",
-            height: "300px",
-            margin: "20px auto",
-          }}
-        />
-        {round < 5 ? (
-          <button onClick={() => setRound(round + 1)}>Next Round</button>
-        ) : (
-          <button color="Green" onClick={() => finishGame()}>
-            Finish!
-          </button>
-        )}
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden">
+        {/* Header */}
+        <div className="bg-black text-white p-6 text-center relative">
+          <h2 className="text-2xl font-bold mb-2">Round {round} Results</h2>
+          <p className="text-yellow-500 text-lg">{message}</p>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 gap-4 p-6 bg-gray-50">
+          <div className="bg-white p-4 rounded-lg shadow-md text-center">
+            <Target className="w-6 h-6 text-red-500 mx-auto mb-2" />
+            <p className="text-gray-600 text-sm">Distance</p>
+            <p className="text-xl font-bold">
+              {(distance / 1000).toFixed(2)} km
+            </p>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-md text-center">
+            <Trophy className="w-6 h-6 text-yellow-500 mx-auto mb-2" />
+            <p className="text-gray-600 text-sm">Points</p>
+            <p className="text-xl font-bold">{points}</p>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-md text-center">
+            <Flame className="w-6 h-6 text-orange-500 mx-auto mb-2" />
+            <p className="text-gray-600 text-sm">Streak</p>
+            <p className="text-xl font-bold">{streak}</p>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-md text-center">
+            <Medal className="w-6 h-6 text-blue-500 mx-auto mb-2" />
+            <p className="text-gray-600 text-sm">Progress</p>
+            <p className="text-xl font-bold">{round}/5</p>
+          </div>
+        </div>
+
+        {/* Map */}
+        <div className="p-6 pt-0">
+          <div className="relative">
+            <div
+              ref={miniMapRef}
+              className="w-full h-64 rounded-lg overflow-hidden shadow-md"
+            />
+            <div className="absolute bottom-2 left-2 bg-white px-3 py-1 rounded-full text-sm shadow-md flex items-center gap-2">
+              <Map className="w-4 h-4" />
+              <span>Location Comparison</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Button */}
+        <div className="p-6 pt-0">
+          {round < 5 ? (
+            <button
+              onClick={() => setRound(round + 1)}
+              className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
+            >
+              Next Round
+            </button>
+          ) : (
+            <button
+              onClick={finishGame}
+              className="w-full bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors"
+            >
+              Finish Game!
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
-};
-
-const overlayStyle = {
-  position: "absolute" as "absolute",
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  backgroundColor: "rgba(0, 0, 0, 0.5)",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  zIndex: 10,
-};
-
-const overlayContentStyle = {
-  backgroundColor: "white",
-  padding: "20px",
-  borderRadius: "8px",
-  textAlign: "center",
-  maxWidth: "400px",
 };
 
 export default ResultsOverlay;

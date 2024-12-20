@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 import useStore from "../Store/useStore";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 
 const FinishPage = () => {
   const {
@@ -24,13 +23,8 @@ const FinishPage = () => {
     hardMode,
   } = useStore();
   const navigate = useNavigate();
-  // Mock data - in real implementation, these would be passed as props
+
   const gameStats = {
-    totalPoints: 1250,
-    pointsEarned: 420,
-    streak: 5,
-    totalTime: "12:45",
-    averageAccuracy: 85,
     bestGuess: "Campus Building",
   };
 
@@ -39,13 +33,7 @@ const FinishPage = () => {
     setFinalStreak(0);
     setAccuracy(0);
     setTotalTime(0);
-
-    if (hardMode) {
-      navigate("/game/Hard");
-      return;
-    }
-
-    navigate("/game/Normal");
+    navigate(hardMode ? "/game/Hard" : "/game/Normal");
   };
 
   const handleBack = () => {
@@ -53,37 +41,49 @@ const FinishPage = () => {
     setFinalStreak(0);
     setAccuracy(0);
     setTotalTime(0);
-
     navigate("/profile");
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="bg-white w-[600px] rounded-2xl shadow-2xl border-4 border-primary overflow-hidden">
+      {/* Map Background */}
+      <div
+        className="absolute inset-0 opacity-10"
+        style={{
+          backgroundImage: `url("/api/placeholder/1920/1080")`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          filter: "grayscale(100%)",
+        }}
+      />
+
+      <div className="relative bg-white/95 w-[600px] rounded-2xl shadow-xl border-2 border-black overflow-hidden">
         {/* Header */}
-        <div className="bg-primary text-primary-foreground text-center py-6">
-          <h1 className="text-3xl font-bold">Game Completed</h1>
-          <p className="text-sm opacity-80">Great job exploring Purdue!</p>
+        <div className="bg-black text-[#CEB888] text-center py-6">
+          <h1 className="text-3xl font-bold">Boiler Up!</h1>
+          <p className="text-sm text-[#CEB888]/80">
+            Great job exploring Purdue!
+          </p>
         </div>
 
         {/* Stats Container */}
-        <div className="p-8 space-y-6">
+        <div className="p-8 space-y-6 bg-gradient-to-b from-white/95 to-white">
           {/* Points and Streak */}
           <div className="flex justify-between">
-            <div className="bg-accent/10 p-4 rounded-xl flex items-center space-x-4 w-[45%]">
-              <Trophy className="text-accent w-12 h-12" />
+            <div className="bg-black p-4 rounded-xl flex items-center space-x-4 w-[45%] border border-[#CEB888]">
+              <Trophy className="text-[#CEB888] w-12 h-12" />
               <div>
-                <h3 className="text-xl font-semibold">Points</h3>
-                <p className="text-2xl font-bold text-accent">{totalPoints}</p>
+                <h3 className="text-lg font-semibold text-[#CEB888]">Points</h3>
+                <p className="text-2xl font-bold text-white">{totalPoints}</p>
               </div>
             </div>
 
-            <div className="bg-accent/10 p-4 rounded-xl flex items-center space-x-4 w-[45%]">
-              <Flame className="text-destructive w-12 h-12" />
+            <div className="bg-black p-4 rounded-xl flex items-center space-x-4 w-[45%] border border-[#CEB888]">
+              <Flame className="text-[#CEB888] w-12 h-12" />
               <div>
-                <h3 className="text-xl font-semibold">Streak</h3>
-                <p className="text-2xl font-bold text-destructive">
-                  {FinalStreak == 1 ? "0" : FinalStreak}
+                <h3 className="text-lg font-semibold text-[#CEB888]">Streak</h3>
+                <p className="text-2xl font-bold text-white">
+                  {FinalStreak === 1 ? "0" : FinalStreak}
                 </p>
               </div>
             </div>
@@ -91,37 +91,39 @@ const FinishPage = () => {
 
           {/* Additional Stats Grid */}
           <div className="grid grid-cols-3 gap-4">
-            <div className="bg-muted p-4 rounded-xl text-center">
-              <Clock className="mx-auto mb-2 text-primary" />
-              <h4 className="font-semibold">Total Time</h4>
-              <p className="text-lg">{totalTime}</p>
+            <div className="bg-[#CEB888]/10 p-4 rounded-xl text-center border border-black">
+              <Clock className="mx-auto mb-2 text-black" />
+              <h4 className="font-semibold text-black">Total Time</h4>
+              <p className="text-lg text-black">
+                {Math.round(totalTime) + " s"}
+              </p>
             </div>
-            <div className="bg-muted p-4 rounded-xl text-center">
-              <ChartLine className="mx-auto mb-2 text-primary" />
-              <h4 className="font-semibold">Accuracy</h4>
-              <p className="text-lg">{Accuracy}%</p>
+            <div className="bg-[#CEB888]/10 p-4 rounded-xl text-center border border-black">
+              <ChartLine className="mx-auto mb-2 text-black" />
+              <h4 className="font-semibold text-black">Accuracy</h4>
+              <p className="text-lg text-black">{Math.round(Accuracy)}%</p>
             </div>
-            <div className="bg-muted p-4 rounded-xl text-center">
-              <Trophy className="mx-auto mb-2 text-primary" />
-              <h4 className="font-semibold">Best Guess</h4>
-              <p className="text-lg">{gameStats.bestGuess}</p>
+            <div className="bg-[#CEB888]/10 p-4 rounded-xl text-center border border-black">
+              <Trophy className="mx-auto mb-2 text-black" />
+              <h4 className="font-semibold text-black">Best Guess</h4>
+              <p className="text-lg text-black">{gameStats.bestGuess}</p>
             </div>
           </div>
 
           {/* Action Buttons */}
           <div className="flex justify-between mt-6">
             <button
-              onClick={() => handleAgain()}
-              className="bg-primary text-primary-foreground px-6 py-3 rounded-xl flex items-center space-x-2 hover:bg-primary/90 transition"
+              onClick={handleAgain}
+              className="bg-black text-[#CEB888] px-6 py-3 rounded-xl flex items-center space-x-2 hover:bg-black/80 transition border border-[#CEB888]"
             >
-              <RefreshCw />
+              <RefreshCw className="text-[#CEB888]" />
               <span>Play Again</span>
             </button>
             <button
-              onClick={() => handleBack()}
-              className="bg-accent text-accent-foreground px-6 py-3 rounded-xl flex items-center space-x-2 hover:bg-accent/90 transition"
+              onClick={handleBack}
+              className="bg-[#CEB888] text-black px-6 py-3 rounded-xl flex items-center space-x-2 hover:bg-[#CEB888]/80 transition border border-black"
             >
-              <Share2 />
+              <Share2 className="text-black" />
               <span>Back</span>
             </button>
           </div>
