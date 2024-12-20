@@ -2,7 +2,7 @@
 // distance in km
 export function calculatePoints(distance, streak, time) {
   console.log(distance);
-  const maxDistance = 50;
+  const maxDistance = 3;
   let total = 0;
   if (time > 5) {
     let amtToSubtract = Math.floor((time - 5) / 3);
@@ -22,7 +22,7 @@ export function calculatePoints(distance, streak, time) {
     return { points: 0, correct: false, accuracy: 0 };
   }
 
-  total += 5000 * Math.pow((1 - distance / maxDistance), 2);
+  total += 5000 * Math.pow((1 - distance / maxDistance), 3);
   if (total < 0) {
     total = 0;
   }
