@@ -2,7 +2,6 @@ import React from "react";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import GoogleSignInImg from "../assets/googleSignIn.png";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -50,7 +49,7 @@ const LoginPage = () => {
         height: "100vh",
         background: "linear-gradient(135deg, #000000, #d4af37)",
         fontFamily: "'Arial', sans-serif",
-        color: "#000", // Black text
+        color: "#000",
       }}
     >
       <div
@@ -60,7 +59,7 @@ const LoginPage = () => {
           padding: "20px",
           borderRadius: "8px",
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-          border: "2px solid #d4af37", // Gold border
+          border: "2px solid #d4af37",
         }}
       >
         <h2
@@ -83,7 +82,7 @@ const LoginPage = () => {
               padding: "10px",
               fontSize: "16px",
               borderRadius: "4px",
-              border: "1px solid #d4af37", // Gold border for inputs
+              border: "1px solid #d4af37",
             }}
           />
           <input
@@ -94,7 +93,7 @@ const LoginPage = () => {
               padding: "10px",
               fontSize: "16px",
               borderRadius: "4px",
-              border: "1px solid #d4af37", // Gold border for inputs
+              border: "1px solid #d4af37",
             }}
           />
           <button
@@ -104,8 +103,8 @@ const LoginPage = () => {
               fontSize: "16px",
               borderRadius: "4px",
               border: "none",
-              backgroundColor: "#d4af37", // Gold background
-              color: "#000", // Black text
+              backgroundColor: "#d4af37",
+              color: "#000",
               cursor: "pointer",
               fontWeight: "bold",
             }}
@@ -146,19 +145,29 @@ const LoginPage = () => {
             alignItems: "center",
           }}
         >
-          <img
-            src={GoogleSignInImg}
-            alt="Sign in with Google"
+          <button
             onClick={googleSign}
             style={{
-              transform: "scale(0.5)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              padding: "10px",
+              fontSize: "16px",
+              borderRadius: "4px",
+              border: "1px solid #d4af37",
+              background: "linear-gradient(90deg, #4285F4, #FBBC05, #EA4335)",
+              color: "#000",
+              fontWeight: "bold",
               cursor: "pointer",
-              maxWidth: "100%", // Ensure the image scales properly
-              height: "auto", // Maintain aspect ratio
-              border: "none", // No border
-              display: "block",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+              transition: "background-color 0.3s ease",
             }}
-          />
+            onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#f1f1f1")}
+            onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#fff")}
+          >
+            Login with Google
+          </button>
         </div>
       </div>
     </div>

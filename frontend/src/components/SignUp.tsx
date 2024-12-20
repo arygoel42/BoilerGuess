@@ -3,7 +3,6 @@ import { useState } from "react";
 import axios from "axios";
 import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
-import GoogleSignUpImg from "../assets/googleSignup.png";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -38,7 +37,7 @@ const SignUp = () => {
         }
       );
 
-      console.log("entering processing pipline");
+      console.log("entering processing pipeline");
 
       if (response.status === 200) {
         console.log("success");
@@ -166,19 +165,26 @@ const SignUp = () => {
             alignItems: "center",
           }}
         >
-          <img
-            src={GoogleSignUpImg}
-            alt="Sign up with Google"
+          <button
             onClick={googleSign}
             style={{
-              transform: "scale(0.5)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              padding: "10px",
+              fontSize: "16px",
+              borderRadius: "4px",
+              border: "none",
+              background: "linear-gradient(90deg, #4285F4, #FBBC05, #EA4335)",
+              color: "#000", // White text
+              fontWeight: "bold",
               cursor: "pointer",
-              maxWidth: "100%", // Ensure the image scales properly
-              height: "auto", // Maintain aspect ratio
-              border: "none", // No border
-              display: "block",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
             }}
-          />
+          >
+            Sign up with Google
+          </button>
         </div>
       </div>
     </div>
