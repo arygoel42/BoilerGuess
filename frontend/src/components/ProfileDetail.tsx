@@ -9,9 +9,15 @@ import {
   CardContent,
 } from "../components/ui/card";
 
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+
 //ahceivments just like lprifle page
 
 const ProfileDetail = () => {
+  const [player, setPlayer] = useState();
+
+  const { username } = useParams();
   const playerStats = {
     username: "BoilerExplorer",
     points: 15420,
@@ -49,6 +55,35 @@ const ProfileDetail = () => {
       },
     ],
   };
+
+  useEffect(() => {
+    async function getUser() {
+      const token = localStorage.getItem("token");
+
+      try {
+        let response = await fetch(
+          "http://localhost:3011/api/users/playerDetails",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              token: token,
+              username: username,
+            }),
+          }
+        );
+
+        let playerObject = await response.json();
+        setPlayer(playerObject);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    getUser();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200">
@@ -90,7 +125,7 @@ const ProfileDetail = () => {
                   alt="Profile"
                   className="rounded-full mx-auto mb-4 border-4 border-yellow-500"
                 />
-                <h2 className="text-2xl font-bold">{playerStats.username}</h2>
+                <h2 className="text-2xl font-bold">{player.username}</h2>
               </div>
 
               <div className="space-y-2">
@@ -98,20 +133,20 @@ const ProfileDetail = () => {
                   <span className="flex items-center">
                     <Star className="mr-2 text-yellow-500" /> Lifetime Points
                   </span>
-                  <span className="font-bold">{playerStats.points}</span>
+                  <span className="font-bold">{player.points}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="flex items-center">
                     <Flame className="mr-2 text-red-500" /> Current Streak
                   </span>
-                  <span className="font-bold">{playerStats.streak} days</span>
+                  <span className="font-bold">{player.streak} days</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="flex items-center">
                     <Target className="mr-2 text-green-500" /> Longest Streak
                   </span>
                   <span className="font-bold">
-                    {playerStats.lifeTimeStreak} days
+                    {player.lifeTimeStreak} days
                   </span>
                 </div>
               </div>
@@ -130,7 +165,7 @@ const ProfileDetail = () => {
             </CardHeader>
             <CardContent>
               <div className="grid md:grid-cols-2 gap-4">
-                {playerStats.achievements.map((achievement, index) => (
+                {player.achievements.map((achievement, index) => (
                   <Card
                     key={index}
                     className="border-2 border-gray-200 hover:border-yellow-500 transition-all"
