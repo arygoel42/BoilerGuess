@@ -9,6 +9,8 @@ import {
   CardContent,
 } from "../components/ui/card";
 
+//ahceivments just like lprifle page
+
 const ProfileDetail = () => {
   const playerStats = {
     username: "BoilerExplorer",

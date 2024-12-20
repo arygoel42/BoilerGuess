@@ -83,7 +83,7 @@ const FinishPage = () => {
               <div>
                 <h3 className="text-xl font-semibold">Streak</h3>
                 <p className="text-2xl font-bold text-destructive">
-                  {FinalStreak}
+                  {FinalStreak == 1 ? "0" : FinalStreak}
                 </p>
               </div>
             </div>

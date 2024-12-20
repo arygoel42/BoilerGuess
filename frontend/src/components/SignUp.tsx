@@ -3,6 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
+import GoogleSignUpImg from "../assets/googleSignup.png";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -62,28 +63,124 @@ const SignUp = () => {
     }
   };
   return (
-    <div>
-      <form
-        onSubmit={(event) => {
-          handleSubmit(event);
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
+        background: "linear-gradient(135deg, #000000, #d4af37)", // Black-to-Gold gradient
+        fontFamily: "'Arial', sans-serif",
+        color: "#000", // Black text
+      }}
+    >
+      <div
+        style={{
+          width: "400px",
+          backgroundColor: "#fff",
+          padding: "20px",
+          borderRadius: "8px",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          border: "2px solid #d4af37", // Gold border
         }}
       >
-        <input placeholder="username"></input>
-        <input placeholder="password"></input>
-        <input placeholder="email"></input>
+        <h2
+          style={{ textAlign: "center", color: "#000", marginBottom: "20px" }}
+        >
+          Sign Up
+        </h2>
+        <form
+          onSubmit={(event) => handleSubmit(event)}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <input
+            placeholder="Username"
+            style={{
+              marginBottom: "10px",
+              padding: "10px",
+              fontSize: "16px",
+              borderRadius: "4px",
+              border: "1px solid #d4af37", // Gold border for inputs
+            }}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            style={{
+              marginBottom: "10px",
+              padding: "10px",
+              fontSize: "16px",
+              borderRadius: "4px",
+              border: "1px solid #d4af37", // Gold border for inputs
+            }}
+          />
+          <input
+            placeholder="Email"
+            style={{
+              marginBottom: "20px",
+              padding: "10px",
+              fontSize: "16px",
+              borderRadius: "4px",
+              border: "1px solid #d4af37", // Gold border for inputs
+            }}
+          />
+          <Button
+            type="submit"
+            style={{
+              padding: "10px",
+              fontSize: "16px",
+              borderRadius: "4px",
+              border: "none",
+              backgroundColor: "#d4af37", // Gold background
+              color: "#000", // Black text
+              cursor: "pointer",
+              fontWeight: "bold",
+            }}
+          >
+            Submit
+          </Button>
+        </form>
 
-        <Button type="submit">Submit</Button>
-      </form>
+        {err && (
+          <p
+            style={{
+              color: "red",
+              marginTop: "20px",
+              textAlign: "center",
+            }}
+          >
+            {err}
+          </p>
+        )}
 
-      <Button
-        onClick={() => {
-          googleSign();
-        }}
-      >
-        Sign up with google
-      </Button>
-
-      {err != null ? <text color="red"> {err}</text> : null}
+        <div
+          style={{
+            marginTop: "30px",
+            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <img
+            src={GoogleSignUpImg}
+            alt="Sign up with Google"
+            onClick={googleSign}
+            style={{
+              transform: "scale(0.5)",
+              cursor: "pointer",
+              maxWidth: "100%", // Ensure the image scales properly
+              height: "auto", // Maintain aspect ratio
+              border: "none", // No border
+              display: "block",
+            }}
+          />
+        </div>
+      </div>
     </div>
   );
 };

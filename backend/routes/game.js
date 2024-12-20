@@ -73,6 +73,7 @@ router.post("/End", authLog, async (req, res) => {
     streak + "streak" + currentUser.lifeTimeStreak + "lifetimestreak"
   );
   const hardMode = req.body.hardMode;
+  const time = req.body.time;
 
   currentUser.streak = streak;
 
@@ -91,7 +92,7 @@ router.post("/End", authLog, async (req, res) => {
         currentUser.achievements[i].progress != "10/10" &&
         currentUser.achievements[i].progress != "Completed!"
       ) {
-        const numerator = toNumber(currentUser.achievements[i].progress);
+        let numerator = toNumber(currentUser.achievements[i].progress);
         numerator++;
         currentUser.achievements[i].progress = `${numerator}/10`;
       }
@@ -110,7 +111,7 @@ router.post("/End", authLog, async (req, res) => {
           currentUser.achievements[i].progress != "5/5" &&
           currentUser.achievements[i].progress != "Completed!"
         ) {
-          const numerator = toNumber(currentUser.achievements[i].progress);
+          let numerator = toNumber(currentUser.achievements[i].progress);
           numerator++;
           currentUser.achievements[i].progress = `${numerator}/5`;
         }
@@ -125,7 +126,7 @@ router.post("/End", authLog, async (req, res) => {
           currentUser.achievements[i].progress != "15/15" &&
           currentUser.achievements[i].progress != "Completed!"
         ) {
-          const numerator = toNumber(currentUser.achievements[i].progress);
+          let numerator = toNumber(currentUser.achievements[i].progress);
           numerator++;
           currentUser.achievements[i].progress = `${numerator}/15`;
         }
@@ -151,7 +152,7 @@ router.post("/End", authLog, async (req, res) => {
           currentUser.achievements[i].progress != "5/5" &&
           currentUser.achievements[i].progress != "Completed!"
         ) {
-          const numerator = toNumber(currentUser.achievements[i].progress);
+          let numerator = toNumber(currentUser.achievements[i].progress);
           numerator++;
           currentUser.achievements[i].progress = `${numerator}/5`;
         }
@@ -171,9 +172,19 @@ router.post("/End", authLog, async (req, res) => {
   }
 
   if (time < 60 + points > 17000) {
+    for (let i = 0; i < currentUser.achievements.length; i++) {
+      if (currentUser.achievements[i].name == "Speed King") {
+        currentUser.achievements[i].progress = "Completed!";
+      }
+    }
   }
 
   if (points > 1000000) {
+    for (let i = 0; i < currentUser.achievements.length; i++) {
+      if (currentUser.achievements[i].name == "King!") {
+        currentUser.achievements[i].progress = "Completed!";
+      }
+    }
   }
 
   if (points > 100000) {
