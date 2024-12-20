@@ -17,7 +17,6 @@ const ProfilePage = () => {
   const navigate = useNavigate();
 
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
-  const [aList, setAList] = useState([]);
 
   if (!loggedIn) {
     console.log(loggedIn + "user");
@@ -30,7 +29,6 @@ const ProfilePage = () => {
     return;
   }
 
-  // setAList(user.achievementsCompleted   + user.achievements)
   // Function to handle the modal close and start game
   const startGame = () => {
     setIsModalOpen(true); // Open the modal when Start Game is clicked
@@ -134,28 +132,52 @@ const ProfilePage = () => {
             </CardHeader>
             <CardContent>
               <div className="grid md:grid-cols-2 gap-4">
-                {user.achievements.map((achievement, index) => (
-                  <Card
-                    key={index}
-                    className="border-2 border-gray-200 hover:border-yellow-500 transition-all"
-                  >
-                    <CardContent className="flex items-center space-x-4 p-4">
-                      <Trophy
-                        name={"Trophy"}
-                        className="h-8 w-8 text-yellow-500"
-                      />
-                      <div>
-                        <h3 className="font-bold">{achievement.name}</h3>
-                        <p className="text-sm text-gray-600">
-                          {achievement.description}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          {achievement.progress}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                {user.achievements
+                  .sort((a, b) => (a.progress === "Completed!" ? -1 : 1)) // Place completed achievements at the top
+                  .map((achievement, index) => (
+                    <Card
+                      key={index}
+                      className={`border-2 ${
+                        achievement.progress === "Completed!"
+                          ? "bg-green-100 border-green-500"
+                          : "border-gray-200 hover:border-yellow-500"
+                      } transition-all`}
+                    >
+                      <CardContent className="flex items-center space-x-4 p-4">
+                        <Trophy
+                          name={"Trophy"}
+                          className={`h-8 w-8 ${
+                            achievement.progress === "Completed!"
+                              ? "text-green-500"
+                              : "text-yellow-500"
+                          }`}
+                        />
+                        <div>
+                          <h3
+                            className={`font-bold ${
+                              achievement.progress === "Completed!"
+                                ? "text-green-600"
+                                : ""
+                            }`}
+                          >
+                            {achievement.name}
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            {achievement.description}
+                          </p>
+                          <p
+                            className={`text-xs ${
+                              achievement.progress === "Completed!"
+                                ? "text-green-500 font-semibold"
+                                : "text-gray-500"
+                            }`}
+                          >
+                            {achievement.progress}
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
               </div>
             </CardContent>
           </Card>

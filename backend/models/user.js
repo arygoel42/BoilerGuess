@@ -103,19 +103,19 @@ userSchema.pre("save", function (next) {
         name: "Speed Demon",
         description:
           "Complete a game in under 1 minute and win 17000 points or more",
-        progress: "0/5",
+        progress: "0/1",
       },
       {
         icon: "Star",
         name: "King!",
         description: "1,000,000 points or more!",
-        progress: "0/5",
+        progress: "0/1",
       },
       {
         icon: "Star",
         name: "Heir to the throne!",
         description: "100,000 points or more!",
-        progress: "0/5",
+        progress: "0/1",
       },
     ];
   }

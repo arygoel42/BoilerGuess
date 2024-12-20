@@ -188,6 +188,11 @@ router.post("/End", authLog, async (req, res) => {
   }
 
   if (points > 100000) {
+    for (let i = 0; i < currentUser.achievements.length; i++) {
+      if (currentUser.achievements[i].name == "Heir to the throne!") {
+        currentUser.achievements[i].progress = "Completed!";
+      }
+    }
   }
 
   //acheivment logic

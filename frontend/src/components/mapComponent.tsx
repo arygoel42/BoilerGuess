@@ -49,16 +49,16 @@ const MapComponent = ({ setRound, round }: Props) => {
     useState<google.maps.StreetViewPanorama | null>(null);
 
   const locationsNormal = [
-    { latitude: 40.4274, longitude: -86.9137 },
-    { latitude: 40.4247, longitude: -86.911 },
-    { latitude: 40.4258, longitude: -86.9115 },
-    { latitude: 40.4284, longitude: -86.9122 },
-    { latitude: 40.4349, longitude: -86.9159 },
-    { latitude: 40.4354, longitude: -86.9196 },
-    { latitude: 40.4255, longitude: -86.9123 },
-    { latitude: 40.4253, longitude: -86.925 },
-    { latitude: 40.4276, longitude: -86.9176 },
-    { latitude: 40.4285, longitude: -86.9135 },
+    { latitude: 40.4275, longitude: -86.9138 }, // Adjusted near Northwestern Ave
+    { latitude: 40.4248, longitude: -86.9109 }, // Adjusted near Grant St
+    { latitude: 40.426, longitude: -86.9114 }, // Adjusted near State St
+    { latitude: 40.4283, longitude: -86.9121 }, // Adjusted near Marsteller St
+    { latitude: 40.4348, longitude: -86.9158 }, // Adjusted near Stadium Ave
+    { latitude: 40.4355, longitude: -86.9195 }, // Adjusted near Tower Dr
+    { latitude: 40.4256, longitude: -86.9124 }, // Adjusted near Wood St
+    { latitude: 40.4254, longitude: -86.9249 }, // Adjusted near University St
+    { latitude: 40.4277, longitude: -86.9177 }, // Adjusted near South St
+    { latitude: 40.4286, longitude: -86.9136 }, // Adjusted near Tapawingo Park
   ];
 
   const streetViewLocationRef = useRef<google.maps.LatLng | null>(null);
