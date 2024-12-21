@@ -74,7 +74,7 @@ const ProfileDetail = () => {
           <section className="lg:col-span-1 bg-white shadow-md rounded-lg p-6">
             <div className="text-center">
               <img
-                src="/api/placeholder/150/150"
+                src={`http://localhost:3011${player.ProfilePicture}`}
                 alt="Profile"
                 className="rounded-full mx-auto mb-4 border-4 border-yellow-500"
               />

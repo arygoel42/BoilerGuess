@@ -121,7 +121,9 @@ const PurdueGeoguesserLeaderboard = () => {
                 border: "2px solid gold",
               }}
             />
-            <span style={{ fontSize: "1.25rem", fontWeight: "bold", color: "gold" }}>
+            <span
+              style={{ fontSize: "1.25rem", fontWeight: "bold", color: "gold" }}
+            >
               Purdue GeoGuesser
             </span>
           </div>
@@ -215,69 +217,95 @@ const PurdueGeoguesserLeaderboard = () => {
         <div style={{ maxHeight: "400px", overflowY: "auto" }}>
           {leaderboardData.map((user, index) => (
             <div
-            key={user._id}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              padding: "1rem",
-              borderBottom: "1px solid #eaeaea",
-              backgroundColor:
-              // colors for each place
-                index === 0
-                  ? "#ffd700"
-                  : index === 1
-                  ? "#c0c0c0" 
-                  : index === 2
-                  ? "#cd7f32"
-                  : hoveredUser === user._id
-                  ? "#fdf7e2"
-                  : "transparent",
-              cursor: "pointer",
-              transition: "background-color 0.3s ease, transform 0.2s ease",
-            }}
-            onMouseEnter={() => setHoveredUser(user._id)}
-            onMouseLeave={() => setHoveredUser(null)}
-            onClick={() => navigate(`/player/${user.username}`)}
-          >
-            <div style={{ marginRight: "1rem", fontWeight: "bold" }}>
-              {index + 1}
-            </div>
-            <img
-              src="/api/placeholder/50/50"
-              alt="User Avatar"
+              key={user._id}
               style={{
-                width: "50px",
-                height: "50px",
-                borderRadius: "50%",
-                marginRight: "1rem",
-                border: "2px solid black",
+                display: "flex",
+                alignItems: "center",
+                padding: "1rem",
+                borderBottom: "1px solid #eaeaea",
+                backgroundColor:
+                  // colors for each place
+                  index === 0
+                    ? "#ffd700"
+                    : index === 1
+                    ? "#c0c0c0"
+                    : index === 2
+                    ? "#cd7f32"
+                    : hoveredUser === user._id
+                    ? "#fdf7e2"
+                    : "transparent",
+                cursor: "pointer",
+                transition: "background-color 0.3s ease, transform 0.2s ease",
               }}
-            />
-            <div style={{ flex: 1 }}>
-              <h3 style={{ fontWeight: "bold", fontSize: "1.1rem" }}>
-                {user.username}
-              </h3>
+              onMouseEnter={() => setHoveredUser(user._id)}
+              onMouseLeave={() => setHoveredUser(null)}
+              onClick={() => navigate(`/player/${user.username}`)}
+            >
+              <div style={{ marginRight: "1rem", fontWeight: "bold" }}>
+                {index + 1}
+              </div>
+              <img
+                src={`http://localhost:3011${
+                  user.ProfilePicture || "/uploads/default-profile.png"
+                }`}
+                alt="Profile"
+                style={{
+                  width: "50px",
+                  height: "50px",
+                  borderRadius: "50%",
+                  marginRight: "1rem",
+                  border: "2px solid black",
+                }}
+              />
+
+              <div style={{ flex: 1 }}>
+                <h3 style={{ fontWeight: "bold", fontSize: "1.1rem" }}>
+                  {user.username}
+                </h3>
+              </div>
+              <div style={{ display: "flex", gap: "1rem", color: "#555" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <Trophy />
+                  {user.points} pts
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <GamepadIcon />
+                  {user.gamesPlayed}
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <Trophy />
+                  {user.completedAchievements}
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <Flame />
+                  {user.lifeTimeStreak}
+                </div>
+              </div>
             </div>
-            <div style={{ display: "flex", gap: "1rem", color: "#555" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                <Trophy />
-                {user.points} pts
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                <GamepadIcon />
-                {user.gamesPlayed}
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                <Trophy />
-                {user.completedAchievements}
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                <Flame />
-                {user.lifeTimeStreak}
-              </div>
-            </div>
-          </div>
-          
           ))}
         </div>
       </div>

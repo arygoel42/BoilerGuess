@@ -53,16 +53,21 @@ const ProfilePage = () => {
     }
 
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("ProfilePicture", file);
+    formData.append("username", user.username); // Replace with the actual username
 
     try {
-      const response = await axios.post("http://localhost:3011/api/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        "http://localhost:3011/api/fileUpload/upload-pfp",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       alert("File uploaded successfully!");
-      // Update user profile or UI as needed
+      console.log(response.data); // Handle the response as needed
     } catch (error) {
       console.error("Error uploading file:", error);
       alert("Failed to upload file. Please try again.");
@@ -109,10 +114,11 @@ const ProfilePage = () => {
             <CardContent className="space-y-4">
               <div className="text-center">
                 <img
-                  src="/api/placeholder/150/150"
+                  src={`http://localhost:3011${user.ProfilePicture}`}
                   alt="Profile"
-                  className="rounded-full mx-auto mb-4 border-4 border-yellow-500"
+                  className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-yellow-500"
                 />
+
                 <h2 className="text-2xl font-bold">{user.username}</h2>
               </div>
 
@@ -156,7 +162,9 @@ const ProfilePage = () => {
                 >
                   Choose Profile Picture
                 </Button>
-                {file && <p className="text-sm mt-2">Selected file: {file.name}</p>}
+                {file && (
+                  <p className="text-sm mt-2">Selected file: {file.name}</p>
+                )}
                 {/* Upload Button */}
                 <Button
                   className="w-full bg-green-500 hover:bg-green-600 mt-4"

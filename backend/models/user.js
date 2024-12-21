@@ -58,6 +58,11 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 100,
   },
+  ProfilePicture: {
+    type: String,
+    default:
+      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+  },
 });
 
 // Initialize default achievements
@@ -95,7 +100,7 @@ userSchema.pre("save", function (next) {
       {
         icon: "Star",
         name: "Accuracy King",
-        description: "achieve a 90% overall accuracy! ",
+        description: "achieve a 90% overall accuracy across 5 games! ",
         progress: "0/1",
       },
       {

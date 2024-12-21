@@ -10,6 +10,7 @@ const passport = require("passport");
 const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo");
 const game = require("./routes/game");
+const fileUpload = require("./routes/fileUpload");
 //add mongoose compass connection logic
 //or add other database connection logic
 
@@ -27,6 +28,8 @@ app.use(
   })
 );
 app.use(express.json());
+// Serve static files (like images) from the 'uploads' directory
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -55,6 +58,7 @@ app.use("/api/users", users);
 app.use("/api/maps", maps);
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/game", game);
+app.use("/api/fileUpload", fileUpload);
 
 app.listen(3011, () => {
   console.log("listening on port 3011");
