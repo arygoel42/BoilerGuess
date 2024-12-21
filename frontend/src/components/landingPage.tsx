@@ -40,7 +40,10 @@ const LandingPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200">
+    <div style={{
+       background: "linear-gradient(to bottom, #333333, #d4af37)",
+       color: "#fff",
+    }}className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200">
       {/* Header */}
       <header className="bg-black text-white p-4 border-b-4 border-yellow-500">
         <div className="container mx-auto flex justify-between items-center">
@@ -54,15 +57,19 @@ const LandingPage = () => {
             </div>
           </div>
           <div className="space-x-2">
-            <Button
-              variant="outline"
-              onClick={() => {
-                navigate("/login");
-              }}
-              className="text-white border-white hover:bg-white hover:text-black"
-            >
-              Login
-            </Button>
+          <Button
+          variant="outline"
+          onClick={() => {
+            navigate("/login");
+          }}
+          className="bg-transparent text-white border-white hover:bg-white hover:text-black"
+          style={{
+            backgroundColor: "black", // Transparent black background
+        }}
+>
+  Login
+</Button>
+
             <Button
               onClick={() => {
                 navigate("/signup");
@@ -79,9 +86,11 @@ const LandingPage = () => {
       <main className="container mx-auto px-4 py-16">
         <div className="text-center space-y-6">
           <h1 className="text-5xl font-bold text-gray-900">
-            Ever Greater<span className="text-yellow-500">.</span>
+            Ever Greater.<span className="text-yellow-500"></span>
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p style = {{
+            color: "#fff",
+          }}className="text-xl text-gray-600 max-w-2xl mx-auto">
             Test your knowledge of Purdue University's historic campus. From the
             Bell Tower to Ross-Ade Stadium, how well do you know your way
             around?
@@ -136,8 +145,12 @@ const LandingPage = () => {
 
         {/* Footer */}
         <div className="mt-16 text-center text-gray-600">
-          <p className="font-bold">"One Brick Higher"</p>
-          <p className="text-sm mt-2">
+          <p style = {{
+            color: "black",
+          }}className="font-bold">"One Brick Higher"</p>
+          <p style = {{
+            color: "black",
+          }}className="text-sm mt-2">
             A tribute to Purdue's spirit of perpetual growth
           </p>
         </div>

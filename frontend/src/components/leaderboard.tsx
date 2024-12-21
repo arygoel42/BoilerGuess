@@ -40,7 +40,6 @@ const PurdueGeoguesserLeaderboard = () => {
 
         let players = await response.json();
 
-        // Add derived field `completedAchievements`
         players = players.map((player) => ({
           ...player,
           completedAchievements: player.achievements
@@ -49,7 +48,6 @@ const PurdueGeoguesserLeaderboard = () => {
             : 0,
         }));
 
-        // Sort by points (ascending) by default
         players.sort((a, b) => b.points - a.points);
 
         setLeaderboardData(players);
@@ -78,138 +76,208 @@ const PurdueGeoguesserLeaderboard = () => {
   };
 
   return (
-    <div className="bg-white min-h-screen font-sans">
+    <div
+      style={{
+        backgroundColor: "lightblue",
+        minHeight: "100vh",
+        fontFamily: "Arial, sans-serif",
+      }}
+    >
       {/* Navbar */}
-      <nav className="bg-black text-white p-4 flex justify-between items-center shadow-md">
-        <div className="flex items-center space-x-4">
+      <nav
+        style={{
+          backgroundColor: "black",
+          color: "white",
+          padding: "1rem",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
           <a
             href="/profile"
-            className="text-white hover:text-gold-500 transition-colors duration-300 flex items-center"
+            style={{
+              color: "white",
+              textDecoration: "none",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
           >
-            <ArrowLeft className="mr-2" />
+            <ArrowLeft />
             <span>Back</span>
           </a>
-          <div className="flex items-center">
+          <div style={{ display: "flex", alignItems: "center" }}>
             <img
               src="/api/placeholder/50/50"
               alt="Purdue GeoGuesser Logo"
-              className="w-10 h-10 mr-3 rounded-full border-2 border-gold"
+              style={{
+                width: "40px",
+                height: "40px",
+                marginRight: "0.5rem",
+                borderRadius: "50%",
+                border: "2px solid gold",
+              }}
             />
-            <span className="text-xl font-bold text-gold">
+            <span style={{ fontSize: "1.25rem", fontWeight: "bold", color: "gold" }}>
               Purdue GeoGuesser
             </span>
           </div>
         </div>
 
-        <div className="flex items-center space-x-4">
-          <div className="relative">
-            <SearchBar />
-          </div>
-
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <SearchBar />
           <a
             href="/profile"
-            className="bg-gold text-black hover:bg-gold-600 p-2 rounded-full transition-colors duration-300"
+            style={{
+              backgroundColor: "gold",
+              color: "black",
+              padding: "0.5rem",
+              borderRadius: "50%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
             <User />
           </a>
         </div>
       </nav>
 
-      <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg mt-8">
-        <div className="bg-black text-white p-6 rounded-t-xl flex justify-between items-center">
-          <div></div>
-          <h1 className="text-3xl font-bold text-center flex-grow">
-            Leaderboard
-          </h1>
-          <div className="w-10"></div>
+      {/* Leaderboard Container */}
+      <div
+        style={{
+          maxWidth: "800px",
+          margin: "2rem auto",
+          backgroundColor: "white",
+          borderRadius: "10px",
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+        }}
+      >
+        <div
+          style={{
+            backgroundColor: "black",
+            color: "white",
+            padding: "1.5rem",
+            borderTopLeftRadius: "10px",
+            borderTopRightRadius: "10px",
+            textAlign: "center",
+          }}
+        >
+          <h1 style={{ fontSize: "2rem", fontWeight: "bold" }}>Leaderboard</h1>
         </div>
 
-        <div className="p-4 bg-gray-100 flex justify-between items-center">
-          <div className="flex space-x-4">
-            {["points", "gamesPlayed", "completedAchievements", "streak"].map(
-              (key) => (
-                <button
-                  key={key}
-                  onClick={() => sortData(key)}
-                  className="flex items-center hover:bg-gold-100 p-2 rounded-md transition-colors duration-300 group"
-                >
-                  {key === "points" && (
-                    <Trophy className="mr-2 text-gold group-hover:scale-110 transition-transform" />
-                  )}
-                  {key === "gamesPlayed" && (
-                    <GamepadIcon className="mr-2 text-gold group-hover:scale-110 transition-transform" />
-                  )}
-                  {key === "completedAchievements" && (
-                    <Trophy className="mr-2 text-gold group-hover:scale-110 transition-transform" />
-                  )}
-                  {key === "streak" && (
-                    <Flame className="mr-2 text-gold group-hover:scale-110 transition-transform" />
-                  )}
-
-                  {key.replace(/([A-Z])/g, " $1").replace(/^./, function (str) {
-                    return str.toUpperCase();
-                  })}
-
-                  {sortConfig.key === key &&
-                    (sortConfig.direction === "descending" ? (
-                      <ChevronDown className="ml-1 text-black" />
-                    ) : (
-                      <ChevronUp className="ml-1 text-black" />
-                    ))}
-                </button>
-              )
-            )}
-          </div>
+        <div
+          style={{
+            padding: "1rem",
+            backgroundColor: "#f7f7f7",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          {["points", "gamesPlayed", "completedAchievements", "streak"].map(
+            (key) => (
+              <button
+                key={key}
+                onClick={() => sortData(key)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  backgroundColor: "white",
+                  border: "1px solid gold",
+                  borderRadius: "5px",
+                  padding: "0.5rem 1rem",
+                  cursor: "pointer",
+                  gap: "0.5rem",
+                }}
+              >
+                {key === "points" && <Trophy />}
+                {key === "gamesPlayed" && <GamepadIcon />}
+                {key === "completedAchievements" && <Trophy />}
+                {key === "streak" && <Flame />}
+                {key.replace(/([A-Z])/g, " $1").replace(/^./, function (str) {
+                  return str.toUpperCase();
+                })}
+                {sortConfig.key === key &&
+                  (sortConfig.direction === "descending" ? (
+                    <ChevronDown />
+                  ) : (
+                    <ChevronUp />
+                  ))}
+              </button>
+            )
+          )}
         </div>
 
-        <div className="overflow-y-auto max-h-[500px]">
-          {leaderboardData?.map((user, index) => (
+        <div style={{ maxHeight: "400px", overflowY: "auto" }}>
+          {leaderboardData.map((user, index) => (
             <div
-              key={user._id}
-              className={`
-                flex items-center p-4 border-b hover:bg-gold-50 transition-all duration-300
-                ${
-                  hoveredUser === user._id
-                    ? "bg-gold-100 scale-105 shadow-md"
-                    : ""
-                }
-              `}
-              onMouseEnter={() => setHoveredUser(user._id)}
-              onClick={() => navigate(`/player/${user.username}`)}
-              onMouseLeave={() => setHoveredUser(null)}
-            >
-              <div className="mr-4 font-bold text-xl w-10 text-right text-gold">
-                {index + 1}
+            key={user._id}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              padding: "1rem",
+              borderBottom: "1px solid #eaeaea",
+              backgroundColor:
+              // colors for each place
+                index === 0
+                  ? "#ffd700"
+                  : index === 1
+                  ? "#c0c0c0" 
+                  : index === 2
+                  ? "#cd7f32"
+                  : hoveredUser === user._id
+                  ? "#fdf7e2"
+                  : "transparent",
+              cursor: "pointer",
+              transition: "background-color 0.3s ease, transform 0.2s ease",
+            }}
+            onMouseEnter={() => setHoveredUser(user._id)}
+            onMouseLeave={() => setHoveredUser(null)}
+            onClick={() => navigate(`/player/${user.username}`)}
+          >
+            <div style={{ marginRight: "1rem", fontWeight: "bold" }}>
+              {index + 1}
+            </div>
+            <img
+              src="/api/placeholder/50/50"
+              alt="User Avatar"
+              style={{
+                width: "50px",
+                height: "50px",
+                borderRadius: "50%",
+                marginRight: "1rem",
+                border: "2px solid black",
+              }}
+            />
+            <div style={{ flex: 1 }}>
+              <h3 style={{ fontWeight: "bold", fontSize: "1.1rem" }}>
+                {user.username}
+              </h3>
+            </div>
+            <div style={{ display: "flex", gap: "1rem", color: "#555" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <Trophy />
+                {user.points} pts
               </div>
-              <img
-                src="/api/placeholder/50/50"
-                alt="/api/placeholder/50/50"
-                className="w-12 h-12 rounded-full mr-4 border-2 border-black transform hover:scale-110 transition-transform"
-              />
-              <div className="flex-grow">
-                <h3 className="font-semibold text-lg text-black">
-                  {user.username}
-                </h3>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <GamepadIcon />
+                {user.gamesPlayed}
               </div>
-              <div className="flex space-x-4 text-gray-700">
-                <div className="flex items-center">
-                  <Trophy className="mr-2 text-gold" />
-                  {user.points} pts
-                </div>
-                <div className="flex items-center">
-                  <GamepadIcon className="mr-2 text-black" />
-                  {user.gamesPlayed}
-                </div>
-                <div className="flex items-center">
-                  <Trophy className="mr-2 text-gold" />
-                  {user.completedAchievements}
-                </div>
-                <div className="flex items-center">
-                  <Flame className="mr-2 text-black" />
-                  {user.lifeTimeStreak}
-                </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <Trophy />
+                {user.completedAchievements}
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <Flame />
+                {user.lifeTimeStreak}
               </div>
             </div>
+          </div>
+          
           ))}
         </div>
       </div>

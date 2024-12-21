@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   Card,
   CardContent,
@@ -12,12 +12,15 @@ import authHook from "../hooks/authHook";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/SeachBar";
 import AccuracyGauge from "./AccuracyGauge";
+import axios from "axios";
 
 const ProfilePage = () => {
   const { loggedIn, user, logout } = authHook();
   const navigate = useNavigate();
 
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
+  const [file, setFile] = useState(null); // File state
+  const fileInputRef = useRef(null); // Ref for the file input
 
   if (!loggedIn) {
     console.log(loggedIn + "user");
@@ -30,7 +33,6 @@ const ProfilePage = () => {
     return;
   }
 
-  // Function to handle the modal close and start game
   const startGame = () => {
     setIsModalOpen(true); // Open the modal when Start Game is clicked
   };
@@ -38,6 +40,33 @@ const ProfilePage = () => {
   const handleStartGame = (mode) => {
     setIsModalOpen(false); // Close the modal
     navigate(`/game/${mode}`); // Navigate to the /game route with the selected mode
+  };
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  const handleUpload = async () => {
+    if (!file) {
+      alert("Please select a file first.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await axios.post("http://localhost:3011/api/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      alert("File uploaded successfully!");
+      // Update user profile or UI as needed
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      alert("Failed to upload file. Please try again.");
+    }
   };
 
   return (
@@ -111,6 +140,32 @@ const ProfilePage = () => {
                 </div>
               </div>
 
+              {/* File Upload Section */}
+              <div className="text-center mt-4">
+                {/* Hidden File Input */}
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  style={{ display: "none" }}
+                  onChange={handleFileChange}
+                />
+                {/* Choose File Button */}
+                <Button
+                  className="w-full bg-blue-500 hover:bg-blue-600 mt-4"
+                  onClick={() => fileInputRef.current.click()}
+                >
+                  Choose Profile Picture
+                </Button>
+                {file && <p className="text-sm mt-2">Selected file: {file.name}</p>}
+                {/* Upload Button */}
+                <Button
+                  className="w-full bg-green-500 hover:bg-green-600 mt-4"
+                  onClick={handleUpload}
+                >
+                  Upload
+                </Button>
+              </div>
+
               <Button
                 className="w-full bg-green-500 hover:bg-green-600"
                 onClick={startGame}
@@ -137,7 +192,7 @@ const ProfilePage = () => {
             <CardContent>
               <div className="grid md:grid-cols-2 gap-4">
                 {user.achievements
-                  .sort((a, b) => (a.progress === "Completed!" ? -1 : 1)) // Place completed achievements at the top
+                  .sort((a, b) => (a.progress === "Completed!" ? -1 : 1))
                   .map((achievement, index) => (
                     <Card
                       key={index}

@@ -86,6 +86,42 @@ router.post("/profile", authLog, async (req, res) => {
   }
 });
 
+// added route 
+router.put("/setProfile", authLog, async (req, res) => {
+  const { username, profileUpdates } = req.body;
+
+  // Ensure the username and profile updates are provided
+  if (!username || !profileUpdates) {
+    return res
+      .status(400)
+      .send({ success: false, message: "Username and updates are required" });
+  }
+
+  try {
+    // Find the user by username
+    const user = await User.findOne({ username: username });
+
+    if (!user) {
+      return res.status(404).send({ success: false, message: "User not found" });
+    }
+
+    // Update the fields in the user's profile
+    Object.keys(profileUpdates).forEach((key) => {
+      user[key] = profileUpdates[key];
+    });
+
+    // Save the updated user
+    await user.save();
+
+    res.status(200).send({ success: true, message: "Profile updated", user });
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    res
+      .status(500)
+      .send({ success: false, message: "Error updating profile: " + error.message });
+  }
+});
+
 router.post("/logout", authLog, async (req, res) => {
   req.logOut((err) => {
     if (err) {
