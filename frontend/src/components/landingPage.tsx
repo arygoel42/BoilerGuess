@@ -3,7 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { MapPin, School, Home, Building, Map } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import EngineeringMall from "../assets/EngineeringMall.jpg";
+import EngineeringMall from "../assets/engineeringMall.png";
+import PMU from "../assets/pmu.jpg";
+import Hovde from "../assets/hovde.jpg";
+import BellTower from "../assets/bellTower.webp";
+
 const LandingPage = () => {
   const navigate = useNavigate();
   const [selectedLandmark, setSelectedLandmark] = useState(null);
@@ -14,21 +18,21 @@ const LandingPage = () => {
       name: "Bell Tower",
       description: "The iconic Purdue Bell Tower",
       fact: "The Bell Tower's clock plays the Purdue fight song every hour.",
-      image: "/images/bell-tower.jpg", // Replace with the actual image path
+      image: BellTower, // Replace with the actual image path
     },
     {
       icon: Home,
       name: "Hovde Hall",
       description: "Administrative heart of Purdue",
       fact: "Hovde Hall was named after Purdue's longest-serving president.",
-      image: "/images/hovde-hall.jpg", // Replace with the actual image path
+      image: Hovde,
     },
     {
       icon: School,
       name: "PMU",
       description: "Purdue Memorial Union",
       fact: "PMU has a bowling alley in its basement.",
-      image: "/images/pmu.jpg", // Replace with the actual image path
+      image: PMU,
     },
     {
       icon: Map,
@@ -86,7 +90,7 @@ const LandingPage = () => {
       <main className="container mx-auto px-4 py-16">
         <div className="text-center space-y-6">
           <h1 className="text-5xl font-bold text-gray-900">
-            Ever Greater.<span className="text-yellow-500"></span>
+            The Persistent Pursuit.<span className="text-yellow-500"></span>
           </h1>
           <p style = {{
             color: "#fff",
