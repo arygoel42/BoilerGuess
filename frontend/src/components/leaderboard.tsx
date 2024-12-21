@@ -245,9 +245,7 @@ const PurdueGeoguesserLeaderboard = () => {
                 {index + 1}
               </div>
               <img
-                src={`http://localhost:3011${
-                  user.ProfilePicture || "/uploads/default-profile.png"
-                }`}
+                src={`http://localhost:3011${user.ProfilePicture}`}
                 alt="Profile"
                 style={{
                   width: "50px",
