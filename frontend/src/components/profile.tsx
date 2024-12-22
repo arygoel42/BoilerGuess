@@ -69,6 +69,10 @@ const ProfilePage = () => {
     }
   };
 
+  const profilePictureSrc = user.ProfilePicture
+    ? `http://localhost:3011${user.ProfilePicture}`
+    : defaultPFP;
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200">
       {/* Header */}
@@ -108,14 +112,11 @@ const ProfilePage = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="text-center">
+                
               <img
-              src={
-                user.ProfilePicture
-                  ? `http://localhost:3011${user.ProfilePicture}`
-                  : defaultPFP // Fallback to default profile picture
-              }
-              alt="Profile"
-              className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-yellow-500"
+            src={profilePictureSrc}
+            alt="Profile"
+            className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-yellow-500"
             />
 
                 <h2 className="text-2xl font-bold">{user.username}</h2>
