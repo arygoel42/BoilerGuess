@@ -82,7 +82,7 @@ const ProfilePage = () => {
           <div className="flex items-center space-x-3">
             <MapPin className="h-8 w-8 text-yellow-500" />
             <div>
-              <span className="text-2xl font-bold">Purdue GeoGuesser</span>
+              <span className="text-2xl font-bold">BoilerGuess</span>
               <div className="text-yellow-500 text-sm">
                 Boiler Up! Hammer Down!
               </div>
@@ -142,7 +142,9 @@ const ProfilePage = () => {
                   <span className="font-bold">{user.lifeTimeStreak}</span>
                 </div>
                 <div className="flex justify-center py-2">
-                  <AccuracyGauge accuracy={user.Accuracy} />
+                  {user.gamesPlayed > 0 && (
+                    <AccuracyGauge accuracy={user.Accuracy} />
+                  )}
                 </div>
               </div>
 

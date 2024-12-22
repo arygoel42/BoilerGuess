@@ -8,9 +8,11 @@ import {
   Search,
   User,
   ArrowLeft,
+  MapPin,
 } from "lucide-react";
 import SearchBar from "../components/SeachBar";
 import { useNavigate } from "react-router-dom";
+import authHook from "../hooks/authHook";
 
 const PurdueGeoguesserLeaderboard = () => {
   const navigate = useNavigate();
@@ -110,21 +112,11 @@ const PurdueGeoguesserLeaderboard = () => {
             <span>Back</span>
           </a>
           <div style={{ display: "flex", alignItems: "center" }}>
-            <img
-              src="/api/placeholder/50/50"
-              alt="Purdue GeoGuesser Logo"
-              style={{
-                width: "40px",
-                height: "40px",
-                marginRight: "0.5rem",
-                borderRadius: "50%",
-                border: "2px solid gold",
-              }}
-            />
+            <MapPin className="h-8 w-8 text-yellow-500" />
             <span
               style={{ fontSize: "1.25rem", fontWeight: "bold", color: "gold" }}
             >
-              Purdue GeoGuesser
+              BoilerGuesser
             </span>
           </div>
         </div>

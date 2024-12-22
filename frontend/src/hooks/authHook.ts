@@ -31,6 +31,11 @@ const authHook = () => {
         setUser(data);
         console.log(data);
       }
+
+      if (response.status === 404) {
+        setLoggedIn(false);
+        setUser(null);
+      }
     } catch (error) {
       console.log(error);
       setLoggedIn(false);

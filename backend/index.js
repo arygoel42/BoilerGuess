@@ -27,9 +27,10 @@ app.use(
     credentials: true, // Allow cookies and other credentials
   })
 );
+app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Ensure this is set up
+
 app.use(express.json());
 // Serve static files (like images) from the 'uploads' directory
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use(express.static(path.join(__dirname, "public")));
 

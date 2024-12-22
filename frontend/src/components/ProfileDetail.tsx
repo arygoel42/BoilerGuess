@@ -10,11 +10,17 @@ import {
 } from "../components/ui/card";
 import AccuracyGauge from "./AccuracyGauge";
 import SearchBar from "./SeachBar";
+import authHook from "../hooks/authHook";
 
 const ProfileDetail = () => {
   const [player, setPlayer] = useState();
   const { username } = useParams();
   const navigate = useNavigate();
+  const { loggedIn, user, logout } = authHook();
+
+  if (!loggedIn) {
+    navigate("/login");
+  }
 
   useEffect(() => {
     async function fetchPlayerDetails() {
@@ -107,7 +113,9 @@ const ProfileDetail = () => {
               </div>
             </div>
             <div className="flex justify-center mt-6">
-              <AccuracyGauge accuracy={player.Accuracy} />
+              {player.gamesPlayed > 0 && (
+                <AccuracyGauge accuracy={player.Accuracy} />
+              )}
             </div>
           </section>
 
