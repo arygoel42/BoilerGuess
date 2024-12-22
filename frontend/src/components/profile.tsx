@@ -110,7 +110,9 @@ const ProfilePage = () => {
               <div className="text-center">
               <img
               src={
-                defaultPFP
+                user.ProfilePicture
+                  ? `http://localhost:3011${user.ProfilePicture}`
+                  : defaultPFP // Fallback to default profile picture
               }
               alt="Profile"
               className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-yellow-500"
