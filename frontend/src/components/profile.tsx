@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/SeachBar";
 import AccuracyGauge from "./AccuracyGauge";
 import axios from "axios";
+import defaultPFP from "../assets/engineeringMall.png";
 
 const ProfilePage = () => {
   const { loggedIn, user, logout } = authHook();
@@ -107,11 +108,13 @@ const ProfilePage = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="text-center">
-                <img
-                  src={`http://localhost:3011${user.ProfilePicture}`}
-                  alt="Profile"
-                  className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-yellow-500"
-                />
+              <img
+              src={
+                defaultPFP
+              }
+              alt="Profile"
+              className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-yellow-500"
+            />
 
                 <h2 className="text-2xl font-bold">{user.username}</h2>
               </div>
