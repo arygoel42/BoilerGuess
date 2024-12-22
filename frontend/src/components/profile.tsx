@@ -22,12 +22,6 @@ const ProfilePage = () => {
   const [file, setFile] = useState(null); // File state
   const fileInputRef = useRef(null); // Ref for the file input
 
-  if (!loggedIn) {
-    console.log(loggedIn + "user");
-    navigate("/login");
-    return;
-  }
-
   if (!user) {
     navigate("/login");
     return;
