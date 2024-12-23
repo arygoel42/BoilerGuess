@@ -2,13 +2,13 @@
 
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
-import GamePage from "../components/GamePage";
+import GamePage from "../components/gamePage";
 import SignUp from "../components/SignUp";
 import LoginPage from "../components/LoginPage";
 import LandingPage from "../components/landingPage";
 import profile from "../components/profile";
 import FinishPage from "../components/finishPage";
-import Leaderboard from "../components/leaderboard";
+import Leaderboard from "../components/Leaderboard";
 import ProfileDetail from "../components/ProfileDetail";
 
 const router = createBrowserRouter([
