@@ -5,7 +5,7 @@ const path = require("path");
 const users = require("./routes/users");
 const maps = require("./routes/maps");
 const session = require("express-session");
-require("./middlewear/Passport");
+require("./middlewear/passport");
 const passport = require("passport");
 const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo");
