@@ -23,7 +23,7 @@ mongoose
 
 app.use(
   cors({
-    origin: true,
+    origin: "https://boiler-guess.vercel.app",
     credentials: true, // Allow cookies and other credentials
   })
 );
@@ -34,7 +34,7 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", process.env.FRONTENDURL);
+  res.header("Access-Control-Allow-Origin", "https://boiler-guess.vercel.app");
 
   res.header("Access-Control-Allow-Credentials", "true");
   res.header(
@@ -62,7 +62,7 @@ app.use(
       domain: "boiler-guess.vercel.app", // Correct domain (no protocol)
       httpOnly: false, // Securely accessible only by the server
       secure: true, // Ensures it's sent over HTTPS
-      same_site: "None", // Cross-site cookie
+      same_site: "none", // Cross-site cookie
       maxAge: 24 * 60 * 60 * 1000, // 1 day
     },
   })
