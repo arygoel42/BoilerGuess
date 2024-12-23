@@ -1,104 +1,89 @@
 const express = require("express");
-const path = require("path");
-const mongoose = require("mongoose");
-const session = require("express-session");
-const MongoStore = require("connect-mongo");
+const app = express();
 const cors = require("cors");
-const passport = require("passport");
-
-// Your routes
+const path = require("path");
 const users = require("./routes/users");
 const maps = require("./routes/maps");
+const session = require("express-session");
+require("./middlewear/passport");
+const passport = require("passport");
+const mongoose = require("mongoose");
+const MongoStore = require("connect-mongo");
 const game = require("./routes/game");
 const fileUpload = require("./routes/fileUpload");
-const auth = require("./routes/auth");
+//add mongoose compass connection logic
+//or add other database connection logic
 
-// Passport config
-require("./middlewear/passport");
-
-// Constants
-const DB_URL =
-  process.env.DB_URL ||
-  "mongodb+srv://aryangoel574:Hisupyo%407058@cluster0.xwshw.mongodb.net/test?retryWrites=true&w=majority";
-const SECRET = process.env.SECRET || "abc kate";
-
-// Connect to MongoDB
 mongoose
-  .connect(DB_URL)
+  .connect(
+    "mongodb+srv://aryangoel574:Hisupyo%407058@cluster0.xwshw.mongodb.net/test?retryWrites=true&w=majority"
+  )
   .then(() => console.log("Connected to MongoDB Atlas..."))
-  .catch((err) => console.error("Could not connect to MongoDB Atlas...", err));
+  .catch((err) => console.error("Could not connect to MongoDB Atlas..."));
 
-/********************
- *  Express App
- ********************/
-const app = express();
-
-// Enable CORS with credentials
 app.use(
   cors({
-    origin: "https://boiler-guess.vercel.app", // Your front-end URL
-    credentials: true, // Allow cookies
+    origin: "https://boiler-guess.vercel.app",
+    credentials: true, // Allow cookies and other credentials
   })
 );
+app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Ensure this is set up
 
-// Serve static files
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+// Serve static files (like images) from the 'uploads' directory
 
-/********************
- *  Session Setup
- ********************/
-const store = MongoStore.create({
-  mongoUrl: DB_URL,
-  touchAfter: 24 * 60 * 60, // 24 hours
-  crypto: { secret: SECRET },
+app.use(express.static(path.join(__dirname, "public")));
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://boiler-guess.vercel.app");
+
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  next();
 });
 
 app.use(
   session({
-    store,
-    name: "session", // your friend named it 'session'
-    secret: SECRET,
+    name: "session",
+
+    secret: "abc kate",
     resave: false,
-    saveUninitialized: true, // same as your friend's code
+    saveUninitialized: true,
     proxy: true,
+    store: MongoStore.create({
+      mongoUrl:
+        "mongodb+srv://aryangoel574:Hisupyo%407058@cluster0.xwshw.mongodb.net/test?retryWrites=true&w=majority",
+    }),
     cookie: {
-      // domain: "boiler-guess.vercel.app",   // Removed
-      httpOnly: true, // Your friend sets this for security
-      secure: process.env.NODE_ENV === "production", // use HTTPS in production
-      sameSite: "None", // cross-site
+      domain: ".boiler-guess.vercel.app", // Correct domain (no protocol)
+      // Ensures it's sent over HTTPS
+      same_site: "None", // Cross-site cookie
       maxAge: 24 * 60 * 60 * 1000, // 1 day
     },
   })
 );
+app.set("trust proxy", true);
 
-// If you're behind a proxy like Heroku/Vercel, trust it
-app.set("trust proxy", 1);
-
-/********************
- *  Passport
- ********************/
 app.use(passport.initialize());
 app.use(passport.session());
 
-/********************
- *  Routes
- ********************/
+//add mongoose compass connection logic
+
 app.get("/", (req, res) => {
   res.send("hello world");
 });
 
 app.use("/api/users", users);
 app.use("/api/maps", maps);
-app.use("/api/auth", auth);
+app.use("/api/auth", require("./routes/auth"));
 app.use("/api/game", game);
 app.use("/api/fileUpload", fileUpload);
 
-/********************
- *  Start Server
- ********************/
 const port = process.env.PORT || 3011;
+
 app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
+  console.log(`listening on port ${port}`);
 });
