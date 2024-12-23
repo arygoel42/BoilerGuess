@@ -12,7 +12,7 @@ async function authLog(req, res, next) {
 
   if (!token) {
     console.log("failed2");
-    return res.status(404).send({ message: "No token received" });
+    return res.status(401).send({ message: "No token received" });
   }
 
   try {
