@@ -43,7 +43,7 @@ const SignUp = () => {
         console.log("success");
         console.log("user created", response.data);
         localStorage.setItem("token", response.data.token);
-        navigate("profile");
+        navigate("/profile");
         setErr(null);
       } else if (response.status === 201) {
         console.log("user already created");
