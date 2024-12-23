@@ -23,7 +23,7 @@ mongoose
 
 app.use(
   cors({
-    origin: `${process.env.FRONTENDURL}`,
+    origin: process.env.FRONTENDURL,
     credentials: true, // Allow cookies and other credentials
   })
 );
@@ -40,12 +40,25 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongoUrl:
-        "mongodb+srv://aryangoel574:Hisupyo%407058@cluster0.xwshw.mongodb.net/test?retryWrites=true&w=majority",
+      cookie: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+      },
     }),
-    secure: process.env.NODE_ENV === "production",
   })
 );
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", process.env.FRONTENDURL);
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  next();
+});
 
 app.use(passport.initialize());
 app.use(passport.session());
