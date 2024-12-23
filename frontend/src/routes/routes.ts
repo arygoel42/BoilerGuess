@@ -2,14 +2,14 @@
 
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
-import GamePage from "../components/gamePage";
-import SignUp from "../components/SignUp";
-import LoginPage from "../components/LoginPage";
-import LandingPage from "../components/landingPage";
-import profile from "../components/profile";
-import FinishPage from "../components/finishPage";
-import PurdueGeoguesserLeaderboard from "../components/Leaderboard";
-import ProfileDetail from "../components/ProfileDetail";
+import GamePage from "../components/gamePage.tsx";
+import SignUp from "../components/SignUp.tsx";
+import LoginPage from "../components/LoginPage.tsx";
+import LandingPage from "../components/landingPage.tsx";
+import profile from "../components/profile.tsx";
+import FinishPage from "../components/finishPage.tsx";
+import PurdueGeoguesserLeaderboard from "../components/Leaderboard.tsx";
+import ProfileDetail from "../components/ProfileDetail.tsx";
 
 const router = createBrowserRouter([
   {
