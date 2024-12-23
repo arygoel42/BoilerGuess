@@ -58,7 +58,6 @@ app.use(
         "mongodb+srv://aryangoel574:Hisupyo%407058@cluster0.xwshw.mongodb.net/test?retryWrites=true&w=majority",
     }),
     cookie: {
-      domain: ".boiler-guess.vercel.app", // Correct domain (no protocol)
       // Ensures it's sent over HTTPS
       same_site: "None", // Cross-site cookie
       maxAge: 24 * 60 * 60 * 1000, // 1 day
