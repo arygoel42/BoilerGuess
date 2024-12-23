@@ -55,8 +55,13 @@ router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/login" }),
   (req, res) => {
-    // On successful login, redirect to the desired route
-    res.redirect(`${process.env.FRONTENDURL}/profile`); // Or any other route you want after login
+    res.redirect(`${process.env.FRONTENDURL}/profile`);
+  },
+  (err, req, res, next) => {
+    console.error("OAuth2 Error:", err); // Log the full error
+    res
+      .status(500)
+      .send({ message: "OAuth authentication failed", error: err });
   }
 );
 
