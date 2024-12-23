@@ -47,7 +47,8 @@ app.use((req, res, next) => {
 
 app.use(
   session({
-    domain: "boiler-guess.vercel.app",
+    path: "https://boiler-guess.vercel.app",
+
     secret: "abc kate",
     resave: false,
     saveUninitialized: false,
@@ -59,7 +60,7 @@ app.use(
     secure: true,
     cookie: {
       domain: "boiler-guess.vercel.app", // Correct domain (no protocol)
-      httpOnly: true, // Securely accessible only by the server
+      httpOnly: false, // Securely accessible only by the server
       secure: true, // Ensures it's sent over HTTPS
       sameSite: "None", // Cross-site cookie
       maxAge: 24 * 60 * 60 * 1000, // 1 day
