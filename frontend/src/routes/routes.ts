@@ -10,6 +10,7 @@ import profile from "../components/profile.tsx";
 import FinishPage from "../components/finishPage.tsx";
 import PurdueGeoguesserLeaderboard from "../components/Leaderboard.tsx";
 import ProfileDetail from "../components/ProfileDetail.tsx";
+import NotFoundPage from "../components/NotFoundPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
   {
     path: "/player/:username",
     element: React.createElement(ProfileDetail),
+  },
+  {
+    path: "*",
+    element: React.createElement(NotFoundPage),
   },
 ]);
 
