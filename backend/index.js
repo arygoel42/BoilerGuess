@@ -57,13 +57,11 @@ app.use(
     }),
     secure: true,
     cookie: {
-      same_site: "none",
       sameSite: "none",
-      secure: true,
+      secure: false,
       maxAge: 24 * 60 * 60 * 1000,
-      headers: "set-cookie",
-      domain: "boiler-guess.vercel.app",
-      httpOnly: true,
+      headers: "Set-Cookie",
+      domain: "https://boiler-guess.vercel.app",
     },
   })
 );

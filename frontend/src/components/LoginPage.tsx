@@ -14,9 +14,13 @@ const LoginPage = () => {
     try {
       let response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`,
+
         {
           email: e.target[0].value,
           password: e.target[1].value,
+        },
+        {
+          withCredentials: true,
         }
       );
 
