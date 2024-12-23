@@ -152,19 +152,22 @@ const MapComponent = ({ setRound, round }: Props) => {
     const token = localStorage.getItem("token");
 
     try {
-      let response = await fetch("http://localhost:3011/api/game/play", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json", // Inform server of JSON payload
-        },
-        body: JSON.stringify({
-          token: token,
-          distance: distance / 1000,
-          streak: streak,
-          time: elapsedTime,
-        }),
-        credentials: "include",
-      });
+      let response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/game/play`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json", // Inform server of JSON payload
+          },
+          body: JSON.stringify({
+            token: token,
+            distance: distance / 1000,
+            streak: streak,
+            time: elapsedTime,
+          }),
+          credentials: "include",
+        }
+      );
 
       if (!response.ok) return;
 

@@ -72,7 +72,7 @@ const ProfilePage = () => {
   const profilePictureSrc =
     user.ProfilePicture !=
     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-      ? `http://localhost:3011${user.ProfilePicture}`
+      ? `${import.meta.env.VITE_BACKEND_URL}${user.ProfilePicture}`
       : defaultPFP;
 
   return (

@@ -19,7 +19,7 @@ const SearchBar = () => {
     try {
       setLoading(true);
       const response = await fetch(
-        `http://localhost:3011/api/game/search/${searchQuery}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/game/search/${searchQuery}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
