@@ -40,12 +40,14 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      cookie: {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-      },
+      mongoUrl:
+        "mongodb+srv://aryangoel574:Hisupyo%407058@cluster0.xwshw.mongodb.net/test?retryWrites=true&w=majority",
     }),
+    secure: process.env.NODE_ENV === "production",
+    cookie: {
+      sameSite: "none",
+      secure: process.env.NODE_ENV === "production",
+    },
   })
 );
 
