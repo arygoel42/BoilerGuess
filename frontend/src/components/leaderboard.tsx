@@ -10,7 +10,7 @@ import {
   ArrowLeft,
   MapPin,
 } from "lucide-react";
-import SearchBar from "../components/SeachBar";
+import SearchBar from "./SeachBar";
 import { useNavigate } from "react-router-dom";
 import authHook from "../hooks/authHook";
 import defaultPFP from "../assets/default-pfp.jpg";
