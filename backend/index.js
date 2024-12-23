@@ -49,6 +49,7 @@ app.use(
       secure: true,
       maxAge: 24 * 60 * 60 * 1000,
       headers: "set-cookie",
+      domain: "boiler-guess.vercel.app",
     },
   })
 );
