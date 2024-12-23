@@ -56,7 +56,7 @@ router.get(
   passport.authenticate("google", { failureRedirect: "/login" }),
   (req, res) => {
     // On successful login, redirect to the desired route
-    res.redirect("http://localhost:5174/profile"); // Or any other route you want after login
+    res.redirect(`${process.env.FRONTENDURL}/profile`); // Or any other route you want after login
   }
 );
 

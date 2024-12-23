@@ -23,7 +23,7 @@ mongoose
 
 app.use(
   cors({
-    origin: "http://localhost:5174",
+    origin: `${process.env.FRONTENDURL}`,
     credentials: true, // Allow cookies and other credentials
   })
 );
@@ -61,6 +61,8 @@ app.use("/api/auth", require("./routes/auth"));
 app.use("/api/game", game);
 app.use("/api/fileUpload", fileUpload);
 
-app.listen(3011, () => {
-  console.log("listening on port 3011");
+const port = process.env.PORT || 3011;
+
+app.listen(port, () => {
+  console.log(`listening on port ${port}`);
 });
