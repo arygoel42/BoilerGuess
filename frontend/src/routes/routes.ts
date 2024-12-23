@@ -8,7 +8,7 @@ import LoginPage from "../components/LoginPage";
 import LandingPage from "../components/landingPage";
 import profile from "../components/profile";
 import FinishPage from "../components/finishPage";
-import Leaderboard from "../components/Leaderboard";
+import PurdueGeoguesserLeaderboard from "../components/Leaderboard";
 import ProfileDetail from "../components/ProfileDetail";
 
 const router = createBrowserRouter([
@@ -35,7 +35,7 @@ const router = createBrowserRouter([
   { path: "/End", element: React.createElement(FinishPage) },
   {
     path: "/leaderboard",
-    element: React.createElement(Leaderboard),
+    element: React.createElement(PurdueGeoguesserLeaderboard),
   },
   {
     path: "/player/:username",
