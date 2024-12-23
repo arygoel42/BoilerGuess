@@ -22,6 +22,12 @@ const PurdueGeoguesserLeaderboard = () => {
     direction: "ascending",
   });
   const [hoveredUser, setHoveredUser] = useState(null);
+  const { loggedIn, user, logout } = authHook();
+
+  if (!user) {
+    navigate("/login");
+    return;
+  }
 
   useEffect(() => {
     async function getUsers() {
