@@ -23,7 +23,7 @@ mongoose
 
 app.use(
   cors({
-    origin: process.env.FRONTENDURL,
+    origin: "https://boiler-guess.vercel.app",
     credentials: true, // Allow cookies and other credentials
   })
 );
@@ -33,12 +33,24 @@ app.use(express.json());
 // Serve static files (like images) from the 'uploads' directory
 
 app.use(express.static(path.join(__dirname, "public")));
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", process.env.FRONTENDURL);
+
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  next();
+});
 
 app.use(
   session({
     secret: "abc kate",
     resave: false,
     saveUninitialized: false,
+    proxy: true,
     store: MongoStore.create({
       mongoUrl:
         "mongodb+srv://aryangoel574:Hisupyo%407058@cluster0.xwshw.mongodb.net/test?retryWrites=true&w=majority",
@@ -56,16 +68,6 @@ app.use(
   })
 );
 app.set("trust proxy", true);
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", process.env.FRONTENDURL);
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  next();
-});
 
 app.use(passport.initialize());
 app.use(passport.session());
