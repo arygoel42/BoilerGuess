@@ -47,23 +47,24 @@ app.use((req, res, next) => {
 
 app.use(
   session({
-    path: "https://boiler-guess.vercel.app",
+    // path: "https://boiler-guess.vercel.app",
 
     secret: "abc kate",
+    name: "connect.sid",
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     proxy: true,
     store: MongoStore.create({
       mongoUrl:
         "mongodb+srv://aryangoel574:Hisupyo%407058@cluster0.xwshw.mongodb.net/test?retryWrites=true&w=majority",
     }),
-    secure: true,
+    // secure: true,
     cookie: {
-      domain: "boiler-guess.vercel.app", // Correct domain (no protocol)
-      httpOnly: false, // Securely accessible only by the server
-      secure: true, // Ensures it's sent over HTTPS
-      same_site: "none", // Cross-site cookie
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      // domain: "boiler-guess.vercel.app", // Correct domain (no protocol)
+      httpOnly: true, // Securely accessible only by the server
+      // secure: true, // Ensures it's sent over HTTPS
+      // same_site: "None", // Cross-site cookie
+      // maxAge: 24 * 60 * 60 * 1000, // 1 day
     },
   })
 );
