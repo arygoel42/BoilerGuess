@@ -111,21 +111,24 @@ const ResultsOverlay: React.FC<ResultsOverlayProps> = ({
     setAccuracy(Accuracy / 5);
 
     try {
-      let response = await fetch("http://localhost:3011/api/game/End", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          token: token,
-          points: totalPoints,
-          streak: updatedStreak,
-          Accuracy: updatedAccuracy,
-          hardMode: hardMode,
-          time: totalTime,
-        }),
-      });
+      let response = await fetch(
+        `{import.meta.env.VITE_BACKEND_URL}/api/game/End`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            token: token,
+            points: totalPoints,
+            streak: updatedStreak,
+            Accuracy: updatedAccuracy,
+            hardMode: hardMode,
+            time: totalTime,
+          }),
+        }
+      );
 
       if (response.ok) {
         navigate("/End");

@@ -14,7 +14,7 @@ const SignUp = () => {
   const [err, setErr] = useState<string | null>(null);
 
   const googleSign = async () => {
-    window.open("http://localhost:3011/api/auth/google", "_self");
+    window.open(`${import.meta.env.VITE_BACKEND_URL}/api/auth/google`, "_self");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,7 +29,7 @@ const SignUp = () => {
       });
 
       let response = await axios.post(
-        "http://localhost:3011/api/users/signUp",
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/signUp`,
         {
           username: e.target[0].value,
           password: e.target[1].value,

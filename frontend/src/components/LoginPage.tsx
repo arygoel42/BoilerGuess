@@ -12,10 +12,13 @@ const LoginPage = () => {
     e.preventDefault();
 
     try {
-      let response = await axios.post("http://localhost:3011/api/auth/login", {
-        email: e.target[0].value,
-        password: e.target[1].value,
-      });
+      let response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`,
+        {
+          email: e.target[0].value,
+          password: e.target[1].value,
+        }
+      );
 
       if (response.status === 200) {
         setErr(null);
@@ -36,7 +39,7 @@ const LoginPage = () => {
   };
 
   const googleSign = async () => {
-    window.open("http://localhost:3011/api/auth/google", "_self");
+    window.open(`${import.meta.env.VITE_BACKEND_URL}/api/auth/google`, "_self");
   };
 
   return (
@@ -163,7 +166,9 @@ const LoginPage = () => {
               boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
               transition: "background-color 0.3s ease",
             }}
-            onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#f1f1f1")}
+            onMouseOver={(e) =>
+              (e.currentTarget.style.backgroundColor = "#f1f1f1")
+            }
             onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#fff")}
           >
             Login with Google

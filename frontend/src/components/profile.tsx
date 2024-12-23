@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/SeachBar";
 import AccuracyGauge from "./AccuracyGauge";
 import axios from "axios";
-import defaultPFP from "../assets/engineeringMall.png";
+import defaultPFP from "../assets/default-pfp.jpg";
 
 const ProfilePage = () => {
   const { loggedIn, user, logout } = authHook();
@@ -53,7 +53,7 @@ const ProfilePage = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3011/api/fileUpload/upload-pfp",
+        `${import.meta.env.VITE_BACKEND_URL}/api/fileUpload/upload-pfp`,
         formData,
         {
           headers: {
@@ -69,9 +69,11 @@ const ProfilePage = () => {
     }
   };
 
-  const profilePictureSrc = user.ProfilePicture
-    ? `http://localhost:3011${user.ProfilePicture}`
-    : defaultPFP;
+  const profilePictureSrc =
+    user.ProfilePicture !=
+    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+      ? `http://localhost:3011${user.ProfilePicture}`
+      : defaultPFP;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200">
@@ -112,12 +114,11 @@ const ProfilePage = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="text-center">
-                
-              <img
-            src={profilePictureSrc}
-            alt="Profile"
-            className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-yellow-500"
-            />
+                <img
+                  src={profilePictureSrc}
+                  alt="Profile"
+                  className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-yellow-500"
+                />
 
                 <h2 className="text-2xl font-bold">{user.username}</h2>
               </div>

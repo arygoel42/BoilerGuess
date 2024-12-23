@@ -11,7 +11,7 @@ import {
 import AccuracyGauge from "./AccuracyGauge";
 import SearchBar from "./SeachBar";
 import authHook from "../hooks/authHook";
-
+import defaultPFP from "../assets/default-pfp.jpg";
 const ProfileDetail = () => {
   const [player, setPlayer] = useState();
   const { username } = useParams();
@@ -27,7 +27,7 @@ const ProfileDetail = () => {
       try {
         const token = localStorage.getItem("token");
         const response = await fetch(
-          "http://localhost:3011/api/users/playerDetails",
+          `${import.meta.env.VITE_BACKEND_URL}/api/users/playerDetails`,
           {
             method: "POST",
             headers: {
@@ -80,9 +80,16 @@ const ProfileDetail = () => {
           <section className="lg:col-span-1 bg-white shadow-md rounded-lg p-6">
             <div className="text-center">
               <img
-                src={`http://localhost:3011${player.ProfilePicture}`}
-                alt="Profile"
-                className="rounded-full mx-auto mb-4 border-4 border-yellow-500"
+                src={
+                  player.ProfilePicture !=
+                  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                    ? `${import.meta.env.VITE_BACKEND_URL}${
+                        player.ProfilePicture
+                      }`
+                    : defaultPFP
+                }
+                alt="Profile Picture"
+                className="w-32 h-32 mx-auto rounded-full object-cover"
               />
               <h2 className="text-2xl font-bold">{player.username}</h2>
             </div>

@@ -13,7 +13,7 @@ import {
 import SearchBar from "../components/SeachBar";
 import { useNavigate } from "react-router-dom";
 import authHook from "../hooks/authHook";
-
+import defaultPFP from "../assets/default-pfp.jpg";
 const PurdueGeoguesserLeaderboard = () => {
   const navigate = useNavigate();
   const [leaderboardData, setLeaderboardData] = useState([]);
@@ -29,7 +29,7 @@ const PurdueGeoguesserLeaderboard = () => {
 
       try {
         let response = await fetch(
-          "http://localhost:3011/api/game/getPlayers",
+          `${import.meta.env.VITE_BACKEND_URL}/api/game/getPlayers`,
           {
             method: "POST",
             headers: {
@@ -237,7 +237,14 @@ const PurdueGeoguesserLeaderboard = () => {
                 {index + 1}
               </div>
               <img
-                src={`http://localhost:3011${user.ProfilePicture}`}
+                src={
+                  user.ProfilePicture !=
+                  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                    ? `${import.meta.env.VITE_BACKEND_URL}${
+                        user.ProfilePicture
+                      }`
+                    : defaultPFP
+                }
                 alt="Profile"
                 style={{
                   width: "50px",
