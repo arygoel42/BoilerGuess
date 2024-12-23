@@ -55,7 +55,7 @@ router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/login" }),
   (req, res) => {
-    res.redirect(`${process.env.FRONTENDURL}/profile`);
+    res.redirect(`https://boiler-guess.vercel.app/profile`);
   },
   (err, req, res, next) => {
     console.error("OAuth2 Error:", err); // Log the full error
