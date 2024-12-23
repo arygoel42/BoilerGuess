@@ -45,6 +45,7 @@ app.use(
     }),
     secure: true,
     cookie: {
+      same_site: "none",
       sameSite: "none",
       secure: true,
       maxAge: 24 * 60 * 60 * 1000,
@@ -54,7 +55,7 @@ app.use(
     },
   })
 );
-
+app.set("trust proxy", true);
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", process.env.FRONTENDURL);
   res.header("Access-Control-Allow-Credentials", "true");
