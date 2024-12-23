@@ -43,7 +43,7 @@ app.use(
       mongoUrl:
         "mongodb+srv://aryangoel574:Hisupyo%407058@cluster0.xwshw.mongodb.net/test?retryWrites=true&w=majority",
     }),
-    secure: process.env.NODE_ENV === "production",
+    secure: true,
     cookie: {
       sameSite: "none",
       secure: process.env.NODE_ENV === "production",
