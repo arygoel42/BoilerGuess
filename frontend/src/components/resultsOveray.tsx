@@ -112,7 +112,7 @@ const ResultsOverlay: React.FC<ResultsOverlayProps> = ({
 
     try {
       let response = await fetch(
-        `{import.meta.env.VITE_BACKEND_URL}/api/game/End`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/game/End`,
         {
           method: "POST",
           headers: {
