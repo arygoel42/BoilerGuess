@@ -51,7 +51,7 @@ app.use(
 
     secret: "abc kate",
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     proxy: true,
     store: MongoStore.create({
       mongoUrl:
