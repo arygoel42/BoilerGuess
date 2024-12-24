@@ -59,7 +59,6 @@ app.set("trust proxy", true);
 
 app.use(
   session({
-    name: "session",
     secret: "abc kat",
     resave: false,
     saveUninitialized: false,
@@ -81,6 +80,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //add mongoose compass connection logic
+
+app.use((req, res, next) => {
+  console.log(req.cookies); // Log the cookies to check if they are sent
+  next();
+});
 
 app.get("/", (req, res) => {
   res.send("hello wd");
