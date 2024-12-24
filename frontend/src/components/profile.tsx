@@ -21,6 +21,7 @@ const ProfilePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
   const [file, setFile] = useState(null); // File state
   const fileInputRef = useRef(null); // Ref for the file input
+
   const { loggedIn, user, logout } = authHook();
 
   if (!user) {
