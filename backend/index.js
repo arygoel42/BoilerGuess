@@ -50,11 +50,9 @@ app.set("trust proxy", true);
 app.use(
   session({
     name: "session",
-
     secret: "abc kate",
     resave: false,
     saveUninitialized: false,
-    proxy: true,
     store: MongoStore.create({
       mongoUrl:
         "mongodb+srv://aryangoel574:Hisupyo%407058@cluster0.xwshw.mongodb.net/test?retryWrites=true&w=majority",
@@ -64,6 +62,7 @@ app.use(
       sameSite: "None", // Cross-site cookie
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       domain: ".vercel.app",
+      secure: true,
     },
   })
 );
