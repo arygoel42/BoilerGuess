@@ -61,7 +61,7 @@ app.use(
     }),
     cookie: {
       // Ensures it's sent over HTTPS
-      same_site: "None", // Cross-site cookie
+      sameSite: "None", // Cross-site cookie
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       domain: ".vercel.app",
     },
