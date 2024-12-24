@@ -53,7 +53,7 @@ router.get(
 // Google OAuth callback route
 router.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/login" }),
+  passport.authenticate("google", { failureRedirect: "/login", session: true }),
   (req, res) => {
     res.redirect(`${process.env.FRONTENDURL}/profile`);
   },
