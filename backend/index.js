@@ -23,7 +23,7 @@ mongoose
 
 app.use(
   cors({
-    origin: "https://boiler-guess-backend.vercel.app",
+    origin: "https://boiler-guess.vercel.app",
     credentials: true, // Allow cookies and other credentials
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: [
