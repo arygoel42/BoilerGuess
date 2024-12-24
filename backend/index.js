@@ -60,7 +60,7 @@ app.set("trust proxy", true);
 app.use(
   session({
     name: "session",
-    secret: "abc kate",
+    secret: "abc kat",
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
