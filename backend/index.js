@@ -45,6 +45,8 @@ app.use((req, res, next) => {
   next();
 });
 
+app.set("trust proxy", true);
+
 app.use(
   session({
     name: "session",
@@ -64,7 +66,6 @@ app.use(
     },
   })
 );
-app.set("trust proxy", true);
 
 app.use(passport.initialize());
 app.use(passport.session());
