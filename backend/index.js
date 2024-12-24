@@ -25,6 +25,16 @@ app.use(
   cors({
     origin: "https://boiler-guess.vercel.app",
     credentials: true, // Allow cookies and other credentials
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-Requested-With",
+      "Accept",
+      "Origin",
+      "Access-Control-Request-Method",
+      "Access-Control-Request-Headers",
+    ],
   })
 );
 app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Ensure this is set up
