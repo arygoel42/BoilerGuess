@@ -71,7 +71,7 @@ app.use(
       // Ensures it's sent over HTTPS
       sameSite: "None", // Cross-site cookie
       maxAge: 24 * 60 * 60 * 1000, // 1 day
-      domain: "boiler-guess.vercel.app",
+      domain: "https://boiler-guess.vercel.app",
       secure: true,
     },
   })
