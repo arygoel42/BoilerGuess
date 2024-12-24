@@ -83,7 +83,7 @@ app.use(passport.session());
 //add mongoose compass connection logic
 
 app.get("/", (req, res) => {
-  res.send("hello world");
+  res.send("hello wold");
 });
 
 app.use("/api/users", users);
