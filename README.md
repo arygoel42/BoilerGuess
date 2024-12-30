@@ -1,7 +1,7 @@
-#BoilerGuess
+# BoilerGuess
 BoilerGuess simulates the popular geography game, "Geoguessr", tailored to Purdue and the West Lafayette region surrounding campus. 
 
-##🚀 Features
+## 🚀 Features
 🌟 Gameplay
 Explore Purdue landmarks in a GeoGuessr-style game
 Two different game modes. The Easy game mode picks popular locations around Purdue's Campus, whereas the hard game mode chooses any location within West Lafayette
@@ -17,7 +17,7 @@ Secure input validation with JOI
 Utilized Google Maps API to implement interactive and responsive map, as well as obtain street-view of locations picked
 Implemented a timer through useState variables to track time for each guess. Points were awarded based off of accuracy and time taken for each guess
 
-##⚡Technologies Used
+## ⚡Technologies Used
 React: Frontend framework for building reusable UI components
 React Query: Efficient state management and server-side data fetching
 Axios: Handle asynchronous HTTP requests to the backend
@@ -28,8 +28,8 @@ HTML & CSS: Core technologies for layout and styling
 JWT Tokens: Secures user sessions
 JOI: Ensures secure server-side validation of user inputs
 
-##🖥️ Deployment
+## 🖥️ Deployment
 BoilerGuess is deployed through Vercel
 
-##Try it for yourself!
+## Try it for yourself!
 To play the game, visit the following link: https://purdue-geoguessr.vercel.app/
