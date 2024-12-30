@@ -191,6 +191,7 @@ const ResultsOverlay: React.FC<ResultsOverlayProps> = ({
         <div className="p-6 pt-0">
           {round < 5 ? (
             <button
+              id="nextRound"
               onClick={() => setRound(round + 1)}
               className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
             >
@@ -198,6 +199,7 @@ const ResultsOverlay: React.FC<ResultsOverlayProps> = ({
             </button>
           ) : (
             <button
+              id="finishGame"
               onClick={finishGame}
               className="w-full bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors"
             >

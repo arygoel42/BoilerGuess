@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   ChevronDown,
   ChevronUp,
   Trophy,
   Flame,
   GamepadIcon,
-  Search,
   User,
   ArrowLeft,
   MapPin,
@@ -13,75 +12,46 @@ import {
 import SearchBar from "./SeachBar";
 import { useNavigate } from "react-router-dom";
 import authHook from "../hooks/authHook";
+import leaderboardHook from "../hooks/leaderboardHook";
 import defaultPFP from "../assets/default-pfp.jpg";
+
 const PurdueGeoguesserLeaderboard = () => {
   const navigate = useNavigate();
-  const [leaderboardData, setLeaderboardData] = useState([]);
   const [sortConfig, setSortConfig] = useState({
     key: "points",
-    direction: "ascending",
+    direction: "descending",
   });
   const [hoveredUser, setHoveredUser] = useState(null);
   const { loggedIn, user, logout } = authHook();
+  const { data: players = [], isLoading, isError, error } = leaderboardHook();
 
-  if (!user) {
-    navigate("/login");
-    return;
+  const sortedPlayers = useMemo(() => {
+    const sortedData = [...players].sort((a, b) => {
+      if (sortConfig.direction === "descending") {
+        return b[sortConfig.key] - a[sortConfig.key];
+      }
+      return a[sortConfig.key] - b[sortConfig.key];
+    });
+    return sortedData;
+  }, [players, sortConfig.key, sortConfig.direction]);
+
+  const handleSort = (key) => {
+    setSortConfig((prevConfig) => ({
+      key,
+      direction:
+        prevConfig.key === key && prevConfig.direction === "descending"
+          ? "ascending"
+          : "descending",
+    }));
+  };
+
+  if (user === null || isLoading) {
+    return <div>Loading...</div>;
   }
 
-  useEffect(() => {
-    async function getUsers() {
-      const token = localStorage.getItem("token");
-
-      try {
-        let response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/api/game/getPlayers`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ token }),
-            credentials: "include",
-          }
-        );
-
-        let players = await response.json();
-
-        players = players.map((player) => ({
-          ...player,
-          completedAchievements: player.achievements
-            ? player.achievements.filter((a) => a.progress === "Completed!")
-                .length
-            : 0,
-        }));
-
-        players.sort((a, b) => b.points - a.points);
-
-        setLeaderboardData(players);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    getUsers();
-  }, []);
-
-  const sortData = (key) => {
-    const direction =
-      sortConfig.key === key && sortConfig.direction === "descending"
-        ? "ascending"
-        : "descending";
-
-    const sortedData = [...leaderboardData].sort((a, b) => {
-      if (direction === "descending") {
-        return b[key] - a[key];
-      }
-      return a[key] - b[key];
-    });
-
-    setLeaderboardData(sortedData);
-    setSortConfig({ key, direction });
-  };
+  if (isError) {
+    return <div>Error loading leaderboard: {error.message}</div>;
+  }
 
   return (
     <div
@@ -182,7 +152,7 @@ const PurdueGeoguesserLeaderboard = () => {
             (key) => (
               <button
                 key={key}
-                onClick={() => sortData(key)}
+                onClick={() => handleSort(key)}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -197,7 +167,7 @@ const PurdueGeoguesserLeaderboard = () => {
                 {key === "points" && <Trophy />}
                 {key === "gamesPlayed" && <GamepadIcon />}
                 {key === "completedAchievements" && <Trophy />}
-                {key === "streak" && <Flame />}
+                {key === "lifeTimeStreak" && <Flame />}
                 {key.replace(/([A-Z])/g, " $1").replace(/^./, function (str) {
                   return str.toUpperCase();
                 })}
@@ -213,7 +183,7 @@ const PurdueGeoguesserLeaderboard = () => {
         </div>
 
         <div style={{ maxHeight: "400px", overflowY: "auto" }}>
-          {leaderboardData.map((user, index) => (
+          {sortedPlayers.map((user, index) => (
             <div
               key={user._id}
               style={{
@@ -222,7 +192,6 @@ const PurdueGeoguesserLeaderboard = () => {
                 padding: "1rem",
                 borderBottom: "1px solid #eaeaea",
                 backgroundColor:
-                  // colors for each place
                   index === 0
                     ? "#ffd700"
                     : index === 1
@@ -244,7 +213,7 @@ const PurdueGeoguesserLeaderboard = () => {
               </div>
               <img
                 src={
-                  user.ProfilePicture !=
+                  user.ProfilePicture !==
                   "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                     ? `${import.meta.env.VITE_BACKEND_URL}${
                         user.ProfilePicture

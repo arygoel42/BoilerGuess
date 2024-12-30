@@ -97,6 +97,7 @@ const SignUp = () => {
           }}
         >
           <input
+            id="username"
             placeholder="Username"
             style={{
               marginBottom: "10px",
@@ -107,6 +108,7 @@ const SignUp = () => {
             }}
           />
           <input
+            id="password"
             type="password"
             placeholder="Password"
             style={{
@@ -118,6 +120,7 @@ const SignUp = () => {
             }}
           />
           <input
+            id="email"
             placeholder="Email"
             style={{
               marginBottom: "20px",
@@ -128,6 +131,7 @@ const SignUp = () => {
             }}
           />
           <Button
+            id="submit"
             type="submit"
             style={{
               padding: "10px",

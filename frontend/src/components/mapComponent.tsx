@@ -17,10 +17,10 @@ interface Props {
 }
 
 const boundaryCoordinates = [
-  { lat: 40.425731, lng: -86.928836 },
-  { lat: 40.422656, lng: -86.904755 },
-  { lat: 40.437634, lng: -86.918154 },
-  { lat: 40.42785, lng: -86.930384 },
+  { lat: 40.424248, lng: -86.928691 }, // Southwest corner 40.424248, -86.928691
+  { lat: 40.42281, lng: -86.910486 }, // Southeast corner  40.422810, -86.910486
+  { lat: 40.431053, lng: -86.910522 }, // Northeast corner  40.431053, -86.910522
+  { lat: 40.431456, lng: -86.926112 }, // Northwest corner  40.431456, -86.926112
 ];
 
 const MapComponent = ({ setRound, round }: Props) => {
@@ -281,7 +281,7 @@ const MapComponent = ({ setRound, round }: Props) => {
   return (
     <div className="map-container">
       <div ref={streetViewRef} className="street-view"></div>
-      <div ref={mapRef} className="map-view"></div>
+      <div id="map" ref={mapRef} className="map-view"></div>
       {distance !== null && (
         <ResultsOverlay
           message={message}

@@ -1,23 +1,25 @@
 const express = require("express");
 const multer = require("multer");
-const fs = require("fs");
-const path = require("path");
 const { User } = require("../models/user");
+const { v2: cloudinary } = require("cloudinary");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const router = express.Router();
+require("dotenv").config();
 
-// Ensure the uploads directory exists
-const uploadsDir = path.join(__dirname, "../uploads");
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-}
+// Configure Cloudinary with your credentials
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME, // Replace with your Cloudinary cloud name
+  api_key: process.env.CLOUD_API_KEY, // Replace with your Cloudinary API key
+  api_secret: process.env.CLOUD_API_SECRET, // Replace with your Cloudinary API secret
+});
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadsDir); // Use the created uploads directory
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname); // Generate a unique filename
+// Configure multer to use Cloudinary storage
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "profile-pictures", // Cloudinary folder to store uploaded files
+    format: async (req, file) => "jpg", // Convert files to jpg format
+    public_id: (req, file) => Date.now() + "-" + file.originalname, // Use a unique filename
   },
 });
 
@@ -31,8 +33,6 @@ router.post(
     try {
       const { username } = req.body; // Extract the username from the request body
 
-      console.log(username);
-
       if (!username) {
         return res.status(400).send({ message: "Username is required" });
       }
@@ -41,7 +41,7 @@ router.post(
         return res.status(400).send({ message: "No file uploaded" });
       }
 
-      const filePath = `/uploads/${req.file.filename}`;
+      const filePath = req.file.path; // Cloudinary provides the file URL as `path`
 
       // Update the user's profilePicture field in the database
       const user = await User.findOneAndUpdate(

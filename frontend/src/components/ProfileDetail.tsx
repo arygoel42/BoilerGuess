@@ -57,7 +57,7 @@ const ProfileDetail = () => {
           <div className="flex items-center space-x-3">
             <MapPin className="h-8 w-8 text-yellow-500" />
             <div>
-              <h1 className="text-3xl font-bold">Purdue GeoGuesser</h1>
+              <h1 className="text-3xl font-bold">BoilerGuessr</h1>
               <p className="text-yellow-500 text-sm">Boiler Up! Hammer Down!</p>
             </div>
           </div>

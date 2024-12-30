@@ -16,14 +16,16 @@ const fileUpload = require("./routes/fileUpload");
 
 mongoose
   .connect(
-    "mongodb+srv://aryangoel574:Hisupyo%407058@cluster0.xwshw.mongodb.net/test?retryWrites=true&w=majority"
+    `${process.env.MONGO_URL}`,
+
+    { readPreference: "secondaryPreferred", serverSelectionTimeoutMS: 50000 }
   )
   .then(() => console.log("Connected to MongoDB Atlas..."))
   .catch((err) => console.error("Could not connect to MongoDB Atlas..."));
 
 app.use(
   cors({
-    origin: "https://boiler-guess.vercel.app",
+    origin: "purdue-geoguessr.vercel.app",
     credentials: true, // Allow cookies and other credentials
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: [
@@ -44,7 +46,10 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://boiler-guess.vercel.app");
+  res.header(
+    "Access-Control-Allow-Origin",
+    "https://purdue-geoguessr.vercel.app"
+  );
 
   res.header("Access-Control-Allow-Credentials", "true");
   res.header(
@@ -63,15 +68,13 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongoUrl:
-        "mongodb+srv://aryangoel574:Hisupyo%407058@cluster0.xwshw.mongodb.net/test?retryWrites=true&w=majority",
+      mongoUrl: `${process.env.MONGO_URL}`,
     }),
     cookie: {
       // Ensures it's sent over HTTPS
       path: "/",
       sameSite: "None", // Cross-site cookie
       maxAge: 24 * 60 * 60 * 1000, // 1 day
-      domain: ".vercel.app",
       secure: true,
     },
   })
@@ -87,8 +90,12 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", (req, res) => {
+app.get("/hello", (req, res) => {
   res.send("hello wd");
+});
+
+app.get("/", (req, res) => {
+  res.send("hello world");
 });
 
 app.use("/api/users", users);
@@ -99,6 +106,4 @@ app.use("/api/fileUpload", fileUpload);
 
 const port = process.env.PORT || 3011;
 
-app.listen(port, () => {
-  console.log(`listening on port ${port}`);
-});
+module.exports = app;

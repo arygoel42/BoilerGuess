@@ -186,6 +186,7 @@ const ProfilePage = () => {
               </Button>
 
               <Button
+                id="logout"
                 className="w-full bg-black hover:bg-gray-800 mt-4"
                 onClick={logout}
               >
@@ -264,8 +265,8 @@ const ProfilePage = () => {
               <div>
                 <h3 className="text-lg font-semibold">Normal Mode</h3>
                 <p>
-                  Play the classic GeoGuesser game with standard rules. Designed
-                  for those who are new to campus!
+                  Easier locations! Designed for those who are new to Purdue
+                  University
                 </p>
                 <Button
                   className="w-full bg-blue-500 hover:bg-blue-600 mt-2"
@@ -277,8 +278,7 @@ const ProfilePage = () => {
               <div>
                 <h3 className="text-lg font-semibold">Exploration Mode</h3>
                 <p>
-                  Challenge yourself to find as many locations as you can in a
-                  short amount of time. Designed for those who are experienced!
+                  Random locations around campus! Designed for upperclassmen
                 </p>
                 <Button
                   className="w-full bg-green-500 hover:bg-green-600 mt-2"

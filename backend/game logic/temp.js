@@ -22,12 +22,12 @@ export function calculatePoints(distance, streak, time) {
     return { points: 0, correct: false, accuracy: 0 };
   }
 
-  total += 5000 * Math.pow((1 - distance / maxDistance), 3);
+  total += 5000 * Math.pow(1 - distance / maxDistance, 3);
   if (total < 0) {
     total = 0;
   }
 
-  const accuracy = calculateAccuracy(distance, 12);
+  const accuracy = calculateAccuracy(distance, 3);
 
   return { points: Math.round(total), correct: false, accuracy: accuracy }; // round score
 }
