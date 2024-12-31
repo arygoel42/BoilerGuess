@@ -105,6 +105,9 @@ const MapComponent = ({ setRound, round }: Props) => {
   );
 
   const resetRound = useCallback(() => {
+    if (currentRound === 1) {
+      setStreak(0); // make streak 0 for each game's start
+    }
     markers.forEach((marker) => marker.setMap(null));
     setMarkers([]);
     setDistance(null);
