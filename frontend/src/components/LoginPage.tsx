@@ -14,6 +14,7 @@ const LoginPage = () => {
     if (/linkedin/i.test(userAgent)) {
       setIsLinkedInBrowser(true);
     }
+    console.log("connected");
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
