@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
@@ -12,9 +11,23 @@ const SignUp = () => {
     email: null,
   });
   const [err, setErr] = useState<string | null>(null);
+  const [isLinkedInBrowser, setIsLinkedInBrowser] = useState(false);
+
+  useEffect(() => {
+    // Detect if the app is running inside LinkedIn's in-app browser
+    const userAgent = navigator.userAgent || navigator.vendor;
+    if (/linkedin/i.test(userAgent)) {
+      setIsLinkedInBrowser(true);
+    }
+  }, []);
 
   const googleSign = async () => {
-    window.open(`${import.meta.env.VITE_BACKEND_URL}/api/auth/google`, "_self");
+    if (!isLinkedInBrowser) {
+      window.open(
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/google`,
+        "_self"
+      );
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,23 +50,15 @@ const SignUp = () => {
         }
       );
 
-      console.log("entering processing pipeline");
-
       if (response.status === 200) {
-        console.log("success");
-        console.log("user created", response.data);
         localStorage.setItem("token", response.data.token);
         navigate("/profile");
-        setErr(null);
       } else if (response.status === 201) {
-        console.log("user already created");
         setErr(response.data);
       } else if (response.status === 500) {
-        console.log("something went wrong");
         setErr(response.data);
       }
     } catch (err) {
-      console.log("error");
       if (err.response && err.response.data && err.response.data.message) {
         setErr(err.response.data.message); // Display error from the server
       } else {
@@ -61,6 +66,7 @@ const SignUp = () => {
       }
     }
   };
+
   return (
     <div
       style={{
@@ -69,9 +75,9 @@ const SignUp = () => {
         alignItems: "center",
         justifyContent: "center",
         height: "100vh",
-        background: "linear-gradient(135deg, #000000, #d4af37)", // Black-to-Gold gradient
+        background: "linear-gradient(135deg, #000000, #d4af37)",
         fontFamily: "'Arial', sans-serif",
-        color: "#000", // Black text
+        color: "#000",
       }}
     >
       <div
@@ -81,7 +87,7 @@ const SignUp = () => {
           padding: "20px",
           borderRadius: "8px",
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-          border: "2px solid #d4af37", // Gold border
+          border: "2px solid #d4af37",
         }}
       >
         <h2
@@ -104,7 +110,7 @@ const SignUp = () => {
               padding: "10px",
               fontSize: "16px",
               borderRadius: "4px",
-              border: "1px solid #d4af37", // Gold border for inputs
+              border: "1px solid #d4af37",
             }}
           />
           <input
@@ -116,7 +122,7 @@ const SignUp = () => {
               padding: "10px",
               fontSize: "16px",
               borderRadius: "4px",
-              border: "1px solid #d4af37", // Gold border for inputs
+              border: "1px solid #d4af37",
             }}
           />
           <input
@@ -127,7 +133,7 @@ const SignUp = () => {
               padding: "10px",
               fontSize: "16px",
               borderRadius: "4px",
-              border: "1px solid #d4af37", // Gold border for inputs
+              border: "1px solid #d4af37",
             }}
           />
           <Button
@@ -138,8 +144,8 @@ const SignUp = () => {
               fontSize: "16px",
               borderRadius: "4px",
               border: "none",
-              backgroundColor: "#d4af37", // Gold background
-              color: "#000", // Black text
+              backgroundColor: "#d4af37",
+              color: "#000",
               cursor: "pointer",
               fontWeight: "bold",
             }}
@@ -171,6 +177,7 @@ const SignUp = () => {
         >
           <button
             onClick={googleSign}
+            disabled={isLinkedInBrowser}
             style={{
               display: "flex",
               alignItems: "center",
@@ -180,16 +187,30 @@ const SignUp = () => {
               fontSize: "16px",
               borderRadius: "4px",
               border: "none",
-              background: "linear-gradient(90deg, #4285F4, #FBBC05, #EA4335)",
-              color: "#000", // White text
+              background: isLinkedInBrowser
+                ? "#ccc"
+                : "linear-gradient(90deg, #4285F4, #FBBC05, #EA4335)",
+              color: isLinkedInBrowser ? "#666" : "#000",
               fontWeight: "bold",
-              cursor: "pointer",
+              cursor: isLinkedInBrowser ? "not-allowed" : "pointer",
               boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
             }}
           >
             Sign up with Google
           </button>
         </div>
+        {isLinkedInBrowser && (
+          <p
+            style={{
+              color: "red",
+              marginTop: "20px",
+              textAlign: "center",
+            }}
+          >
+            Google Sign-up is not supported in the LinkedIn in-app browser.
+            Please open the app in your browser to sign up.
+          </p>
+        )}
       </div>
     </div>
   );

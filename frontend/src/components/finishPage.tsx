@@ -45,6 +45,7 @@ const FinishPage = () => {
     setFinalStreak(0);
     setAccuracy(0);
     setTotalTime(0);
+    setStreak(0);
     navigate("/profile");
   };
 

@@ -148,38 +148,41 @@ const PurdueGeoguesserLeaderboard = () => {
             alignItems: "center",
           }}
         >
-          {["points", "gamesPlayed", "completedAchievements", "streak"].map(
-            (key) => (
-              <button
-                key={key}
-                onClick={() => handleSort(key)}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  backgroundColor: "white",
-                  border: "1px solid gold",
-                  borderRadius: "5px",
-                  padding: "0.5rem 1rem",
-                  cursor: "pointer",
-                  gap: "0.5rem",
-                }}
-              >
-                {key === "points" && <Trophy />}
-                {key === "gamesPlayed" && <GamepadIcon />}
-                {key === "completedAchievements" && <Trophy />}
-                {key === "lifeTimeStreak" && <Flame />}
-                {key.replace(/([A-Z])/g, " $1").replace(/^./, function (str) {
-                  return str.toUpperCase();
-                })}
-                {sortConfig.key === key &&
-                  (sortConfig.direction === "descending" ? (
-                    <ChevronDown />
-                  ) : (
-                    <ChevronUp />
-                  ))}
-              </button>
-            )
-          )}
+          {[
+            "points",
+            "gamesPlayed",
+            "completedAchievements",
+            "lifeTimeStreak",
+          ].map((key) => (
+            <button
+              key={key}
+              onClick={() => handleSort(key)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                backgroundColor: "white",
+                border: "1px solid gold",
+                borderRadius: "5px",
+                padding: "0.5rem 1rem",
+                cursor: "pointer",
+                gap: "0.5rem",
+              }}
+            >
+              {key === "points" && <Trophy />}
+              {key === "gamesPlayed" && <GamepadIcon />}
+              {key === "completedAchievements" && <Trophy />}
+              {key === "lifeTimeStreak" && <Flame />}
+              {key.replace(/([A-Z])/g, " $1").replace(/^./, function (str) {
+                return str.toUpperCase();
+              })}
+              {sortConfig.key === key &&
+                (sortConfig.direction === "descending" ? (
+                  <ChevronDown />
+                ) : (
+                  <ChevronUp />
+                ))}
+            </button>
+          ))}
         </div>
 
         <div style={{ maxHeight: "400px", overflowY: "auto" }}>
